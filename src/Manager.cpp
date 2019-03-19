@@ -1,6 +1,6 @@
-#include "Manager.h"
-
 #include <QDebug>
+
+#include "Manager.h"
 
 Manager::Manager(void) : QFrame() {
 
@@ -17,9 +17,25 @@ Manager::Manager(void) : QFrame() {
 
     setNullState();
 
-    setMinimumWidth(340);
+    setMinimumWidth(1000);
 
     setAcceptDrops(true);
+
+}
+
+void Manager::addEditor(Editor *ed) {
+
+    if (nullState) {
+
+        layout->removeWidget(emptySetIcon);
+        emptySetIcon->setVisible(false);
+        layout->setAlignment(Qt::AlignTop);
+        nullState = false;
+
+    }
+
+    layout->addWidget(ed);
+    editors.push_back(ed);
 
 }
 
@@ -41,7 +57,19 @@ void Manager::contextMenuEvent(QContextMenuEvent*) {
     QAction *action = menu.exec(QCursor::pos());
     if (action == addSeqAction) {
 
+        //thumb = new Thumbnail(); // test
+        addEditor(new Editor());
+
     }
 
 }
 
+void Manager::clean(void) {
+
+    // clean all editors
+    std::vector<Editor*>::iterator iter;
+    for (iter = editors.begin(); iter != editors.end(); iter++) {
+        (*iter)->clean();
+    }
+
+}

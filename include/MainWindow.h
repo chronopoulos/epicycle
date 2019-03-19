@@ -4,7 +4,6 @@
 
 #include "Manager.h"
 #include "Editor.h"
-#include "NotificationThread.h"
 
 #define PLAYING 0
 #define PAUSED 1
@@ -26,8 +25,6 @@ class MainWindow : public QWidget
         Editor *editor;
 
         int transport;
-
-        NotificationThread *notiThread;
 
     protected:
         void keyPressEvent(QKeyEvent*);

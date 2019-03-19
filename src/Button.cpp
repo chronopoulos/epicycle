@@ -24,6 +24,8 @@ Button::Button(int step) {
 
     setPhocus(false);
 
+    sq_trigger_init(&m_trig);
+
 }
 
 void Button::setPhocus(bool phocus) {
@@ -43,11 +45,20 @@ void Button::toggle(void) {
 
     m_isActive = !m_isActive;
 
+    if (m_isActive) {
+        sq_trigger_set_note(&m_trig, m_trig.note, m_trig.velocity, m_trig.length);
+    } else {
+        sq_trigger_set_null(&m_trig);
+    }
+
+    emit trigUpdated(m_step, &m_trig);
     update();
 
 }
 
 void Button::wheelEvent(QWheelEvent *e) {
+
+    int wheelIncrement, wheelSign;
 
     if (QApplication::keyboardModifiers() == Qt::ShiftModifier) {
         wheelIncrement = 4;
@@ -67,39 +78,38 @@ void Button::wheelEvent(QWheelEvent *e) {
 
 }
 
-void Button::adjustEditParameter(int) {
+void Button::adjustEditParameter(int increment) {
 
-    /*
+    int noteValue, noteVelocity;
+
     if (m_isActive) {
 
         if (m_editParameter == Button::Edit_NoteValue) {
 
-            noteValue = m_trig.noteValue();
+            noteValue = m_trig.note;
 
             noteValue += increment;
             if (noteValue > 127) noteValue = 127;
             if (noteValue < 0) noteValue = 0;
 
-            m_trig.setNoteValue(noteValue);
+            m_trig.note = noteValue;
 
         } else if (m_editParameter == Button::Edit_NoteVelocity) {
 
-            noteVelocity = m_trig.noteVelocity();
+            noteVelocity = m_trig.velocity;
 
             noteVelocity += increment;
             if (noteVelocity > 127) noteVelocity = 127;
             if (noteVelocity < 0) noteVelocity = 0;
 
-
-            m_trig.setNoteVelocity(noteVelocity);
+            m_trig.velocity = noteVelocity;
 
         }
 
-        emit trigSet(m_step, &m_trig);
+        emit trigUpdated(m_step, &m_trig);
         update();
 
     }
-    */
 
 }
 
@@ -112,6 +122,8 @@ void Button::setEditParameter(int index) {
 }
 
 void Button::paintEvent(QPaintEvent *e) {
+
+    QString editText;
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
@@ -126,14 +138,11 @@ void Button::paintEvent(QPaintEvent *e) {
         painter.setBrush(Qt::red);
         painter.drawRect(0.3*w, 0.1*h, 0.4*w, 0.2*h);
 
-        /*
         if (m_editParameter == Button::Edit_NoteValue) {
-            editText = QString::number(m_trig.noteValue());
+            editText = QString::number(m_trig.note);
         } else if (m_editParameter == Button::Edit_NoteVelocity) {
-            editText = QString::number(m_trig.noteVelocity());
+            editText = QString::number(m_trig.velocity);
         }
-        */
-        editText = QString::number(60);
 
         painter.drawText(QRect(0.3*w,0.5*h,0.4*w,0.2*h), Qt::AlignCenter, editText);
 

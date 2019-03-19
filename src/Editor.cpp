@@ -1,4 +1,9 @@
+#include <QDebug>
+
 #include "Editor.h"
+
+extern sq_session_t SESSION;
+extern sq_outport_t OUTPORT;
 
 Editor::Editor(void) : QFrame() {
 
@@ -21,6 +26,8 @@ Editor::Editor(void) : QFrame() {
 
         tmpButton = new Button(i);
         buttons.push_back(tmpButton);
+        connect(tmpButton, SIGNAL(trigUpdated(int, sq_trigger_t*)),
+                this, SLOT(updateTrig(int, sq_trigger_t*)));
         topLayout->addWidget(tmpButton);
 
         tmpIndicator = new Indicator(i);
@@ -40,6 +47,18 @@ Editor::Editor(void) : QFrame() {
     setLayout(layout);
 
     updatePlayhead(0);
+
+    // sequoia data
+
+    sq_sequence_init(&m_seq, 16, 256);
+    sq_sequence_set_outport(&m_seq, &OUTPORT);
+    sq_sequence_set_notifications(&m_seq, true);
+    sq_session_add_sequence(&SESSION, &m_seq);
+
+    // notifications
+    notiThread = new NotificationThread(this, &m_seq);
+    connect(notiThread, SIGNAL(playheadUpdated(int)), this, SLOT(updatePlayhead(int)));
+    notiThread->start();
 
 }
 
@@ -68,3 +87,15 @@ void Editor::updateRBracket(int step) {
 
 }
 
+void Editor::clean(void) {
+
+    notiThread->requestStop();
+    notiThread->wait();
+
+}
+
+void Editor::updateTrig(int step, sq_trigger_t *trig) {
+
+    sq_sequence_set_trig(&m_seq, step, trig);
+
+}

@@ -6,6 +6,8 @@
 #include <QPaintEvent>
 #include <QPainter>
 
+#include "sequoia.h"
+
 class Button : public QFrame
 {
     Q_OBJECT
@@ -26,17 +28,17 @@ class Button : public QFrame
         int m_step;
         int m_editParameter;
 
-        // to avoid repeated declaration
-        int noteValue, noteVelocity;
-        int wheelIncrement, wheelSign;
-        QString editText;
-
         bool m_phocus;
+
+        sq_trigger_t m_trig;
 
     protected:
         void mousePressEvent(QMouseEvent*);
         void paintEvent(QPaintEvent*);
         void wheelEvent(QWheelEvent*);
+
+    signals:
+        void trigUpdated(int, sq_trigger_t*);
 
 };
 

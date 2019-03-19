@@ -10,18 +10,23 @@
 #include <QDragEnterEvent>
 #include <QMimeData>
 
+#include "Editor.h"
+
 class Manager : public QFrame
 {
     Q_OBJECT
 
     public:
         Manager(void);
+        void addEditor(Editor*);
+        void clean(void);
 
     private:
         QVBoxLayout *layout;
         QLabel *emptySetIcon;
         bool nullState;
         void setNullState(void);
+        std::vector<Editor*> editors;
 
     protected:
         void contextMenuEvent(QContextMenuEvent*);
