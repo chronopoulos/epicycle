@@ -3,11 +3,13 @@
 
 #include <QFrame>
 #include <QHBoxLayout>
+#include <QContextMenuEvent>
 
 #include "sequoia.h"
 
 #include "Button.h"
 #include "NotificationThread.h"
+#include "ClickLabel.h"
 
 class Editor : public QFrame
 {
@@ -30,12 +32,20 @@ class Editor : public QFrame
 
         NotificationThread *notiThread;
 
+        ClickLabel *nameLabel;
+        ClickLabel *transposeLabel, *clockDivLabel, *muteLabel;
+
     public slots:
         void updatePlayhead(int);
         void updateLBracket(int);
         void updateRBracket(int);
-        void updateTrig(int, sq_trigger_t*);
+        void setTrig(int, sq_trigger_t*);
+        void setTranspose(int);
+        void setClockDivide(int);
+        void setMute(QString);
 
+    protected:
+        void contextMenuEvent(QContextMenuEvent*);
 
 };
 

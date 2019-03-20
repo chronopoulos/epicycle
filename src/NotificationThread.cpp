@@ -32,15 +32,15 @@ void NotificationThread::run(void) {
         }
 
         if (sq_sequence_read_new_transpose(m_seq, &vi)) {
-            printf("transpose: %d\n", vi);
+            emit transposeUpdated(vi);
         }
 
         if (sq_sequence_read_new_clockdivide(m_seq, &vi)) {
-            printf("clockdivide: %d\n", vi);
+            emit clockDivideUpdated(vi);
         }
 
         if (sq_sequence_read_new_mute(m_seq, &vb)) {
-            printf("mute: %s\n", vb ? "true" : "false");
+            vb ? emit muteUpdated("True") : emit muteUpdated("False");
         }
 
         usleep(10000);

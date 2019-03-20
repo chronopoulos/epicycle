@@ -1,8 +1,8 @@
 #include <QDebug>
 
-#include "Manager.h"
+#include "SequenceManager.h"
 
-Manager::Manager(void) : QFrame() {
+SequenceManager::SequenceManager(void) : QFrame() {
 
     layout = new QVBoxLayout();
     setLayout(layout);
@@ -23,7 +23,7 @@ Manager::Manager(void) : QFrame() {
 
 }
 
-void Manager::addEditor(Editor *ed) {
+void SequenceManager::addEditor(Editor *ed) {
 
     if (nullState) {
 
@@ -39,7 +39,7 @@ void Manager::addEditor(Editor *ed) {
 
 }
 
-void Manager::setNullState(void) {
+void SequenceManager::setNullState(void) {
 
     layout->setAlignment(Qt::AlignCenter);
     layout->addWidget(emptySetIcon);
@@ -48,7 +48,7 @@ void Manager::setNullState(void) {
 
 }
 
-void Manager::contextMenuEvent(QContextMenuEvent*) {
+void SequenceManager::contextMenuEvent(QContextMenuEvent*) {
 
     QMenu menu;
 
@@ -57,14 +57,13 @@ void Manager::contextMenuEvent(QContextMenuEvent*) {
     QAction *action = menu.exec(QCursor::pos());
     if (action == addSeqAction) {
 
-        //thumb = new Thumbnail(); // test
         addEditor(new Editor());
 
     }
 
 }
 
-void Manager::clean(void) {
+void SequenceManager::clean(void) {
 
     // clean all editors
     std::vector<Editor*>::iterator iter;

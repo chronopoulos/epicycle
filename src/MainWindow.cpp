@@ -3,31 +3,34 @@
 
 #include <unistd.h>
 
-#include "MainWindow.h"
-
 #include "sequoia.h"
+
+#include "MainWindow.h"
+#include "Editor.h"
+#include "OutportWidget.h"
 
 #define TPS 256
 #define BPM 120
 
 sq_session_t SESSION;
-sq_outport_t OUTPORT;
 
 MainWindow::MainWindow() : QWidget() {
 
     // initialize the global SESSION and main OUTPORT
     sq_session_init(&SESSION, "epicycle", TPS);
     sq_session_set_bpm(&SESSION, 120);
-    sq_outport_init(&OUTPORT, "main");
-    sq_session_register_outport(&SESSION, &OUTPORT);
 
     // GUI stuff
 
-    layout = new QGridLayout();
+    layout = new QHBoxLayout();
 
-    manager = new Manager();
+    inportManager = new InportManager();
+    seqManager = new SequenceManager();
+    outportManager = new OutportManager();
 
-    layout->addWidget(manager, 0,0, 6,6);
+    layout->addWidget(inportManager);
+    layout->addWidget(seqManager);
+    layout->addWidget(outportManager);
 
     this->setLayout(layout);
     this->setWindowTitle("epicycle");
@@ -57,7 +60,11 @@ void MainWindow::keyPressEvent(QKeyEvent *e) {
         if (e->key() == Qt::Key_Space) {
                 togglePlayState();
         } else if (e->key() == Qt::Key_N) {
-                manager->addEditor(new Editor());
+                seqManager->addEditor(new Editor());
+        } else if (e->key() == Qt::Key_P) {
+                outportManager->addOutport(new OutportWidget());
+        } else if (e->key() == Qt::Key_Q) {
+                inportManager->addInport(new InportWidget());
         }
 
     }
@@ -66,6 +73,6 @@ void MainWindow::keyPressEvent(QKeyEvent *e) {
 
 void MainWindow::closeEvent(QCloseEvent*) {
 
-    manager->clean();
+    seqManager->clean();
 
 }

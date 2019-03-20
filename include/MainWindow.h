@@ -2,8 +2,9 @@
 #include <QGridLayout>
 #include <QString>
 
-#include "Manager.h"
-#include "Editor.h"
+#include "InportManager.h"
+#include "SequenceManager.h"
+#include "OutportManager.h"
 
 #define PLAYING 0
 #define PAUSED 1
@@ -19,10 +20,11 @@ class MainWindow : public QWidget
         void togglePlayState(void);
 
     private:
-        QGridLayout *layout;
+        QHBoxLayout *layout;
 
-        Manager *manager;
-        Editor *editor;
+        InportManager *inportManager;
+        SequenceManager *seqManager;
+        OutportManager *outportManager;
 
         int transport;
 

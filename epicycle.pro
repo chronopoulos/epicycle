@@ -36,16 +36,28 @@ QMAKE_CXXFLAGS += -std=gnu++0x
 # Input
 SOURCES += main.cpp
 SOURCES += MainWindow.cpp
-SOURCES += Manager.cpp
+SOURCES += SequenceManager.cpp
+SOURCES += OutportManager.cpp
+SOURCES += OutportWidget.cpp
+SOURCES += InportManager.cpp
+SOURCES += InportWidget.cpp
 SOURCES += Editor.cpp
 SOURCES += Button.cpp
 SOURCES += NotificationThread.cpp
+SOURCES += ClickLabel.cpp
+SOURCES += Helper.cpp
 
 HEADERS += MainWindow.h
-HEADERS += Manager.h
+HEADERS += SequenceManager.h
+HEADERS += OutportManager.h
+HEADERS += OutportWidget.h
+HEADERS += InportManager.h
+HEADERS += InportWidget.h
 HEADERS += Editor.h
 HEADERS += Button.h
 HEADERS += NotificationThread.h
+HEADERS += ClickLabel.h
+HEADERS += Helper.h
 
 RESOURCES = epicycle.qrc
 

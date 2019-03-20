@@ -3,6 +3,7 @@
 
 #include <QThread>
 #include <QMutex>
+#include <QString>
 
 #include "sequoia.h"
 
@@ -24,6 +25,9 @@ class NotificationThread : public QThread
 
     signals:
         void playheadUpdated(int);
+        void transposeUpdated(int);
+        void clockDivideUpdated(int);
+        void muteUpdated(QString);
 
 };
 

@@ -26,6 +26,8 @@ Button::Button(int step) {
 
     sq_trigger_init(&m_trig);
 
+    setContextMenuPolicy(Qt::PreventContextMenu);
+
 }
 
 void Button::setPhocus(bool phocus) {
@@ -182,6 +184,8 @@ Indicator::Indicator(int step) {
     setMinimumWidth(50);
     setMaximumWidth(50);
 
+    setContextMenuPolicy(Qt::PreventContextMenu);
+
 }
 
 void Indicator::setPlayhead(bool hasPlayhead) {
@@ -259,3 +263,4 @@ void Indicator::mousePressEvent(QMouseEvent *e) {
     }
 
 }
+

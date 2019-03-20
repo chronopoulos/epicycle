@@ -12,12 +12,12 @@
 
 #include "Editor.h"
 
-class Manager : public QFrame
+class SequenceManager : public QFrame
 {
     Q_OBJECT
 
     public:
-        Manager(void);
+        SequenceManager(void);
         void addEditor(Editor*);
         void clean(void);
 
