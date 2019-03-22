@@ -257,7 +257,11 @@ void Indicator::paintEvent(QPaintEvent*) {
 void Indicator::mousePressEvent(QMouseEvent *e) {
 
     if (e->buttons() == Qt::LeftButton) {
-        setLBracket(true);
+        if (QApplication::keyboardModifiers() & Qt::ControlModifier) {
+            emit playheadRequested(m_step);
+        } else {
+            setLBracket(true);
+        }
     } else if (e->buttons() == Qt::RightButton) {
         setRBracket(true);
     }

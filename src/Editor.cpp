@@ -53,6 +53,7 @@ Editor::Editor(void) : QFrame() {
         indicators.push_back(tmpIndicator);
         connect(tmpIndicator, SIGNAL(lBracketSet(int)), this, SLOT(updateLBracket(int)));
         connect(tmpIndicator, SIGNAL(rBracketSet(int)), this, SLOT(updateRBracket(int)));
+        connect(tmpIndicator, SIGNAL(playheadRequested(int)), this, SLOT(setPlayhead(int)));
         if (i==0) {
             tmpIndicator->setLBracket(true);
         }
@@ -89,7 +90,7 @@ Editor::Editor(void) : QFrame() {
 
     // connect the click labels
 
-    connect(nameLabel, SIGNAL(valueChanged(QString)), nameLabel, SLOT(setValue(QString)));
+    connect(nameLabel, SIGNAL(valueChanged(QString)), this, SLOT(setName(QString)));
 
     connect(transposeLabel, SIGNAL(valueChanged(int)), this, SLOT(setTranspose(int)));
     connect(notiThread, SIGNAL(transposeUpdated(int)), transposeLabel, SLOT(setValue(int)));
@@ -134,6 +135,13 @@ void Editor::clean(void) {
 
 }
 
+void Editor::setName(QString name) {
+
+    sq_sequence_set_name(&m_seq, name.toStdString().c_str());
+    nameLabel->setValue(name); // there are no notifications for name changes
+
+}
+
 void Editor::setTrig(int step, sq_trigger_t *trig) {
 
     sq_sequence_set_trig(&m_seq, step, trig);
@@ -143,6 +151,12 @@ void Editor::setTrig(int step, sq_trigger_t *trig) {
 void Editor::setTranspose(int transpose) {
 
     sq_sequence_set_transpose(&m_seq, transpose);
+
+}
+
+void Editor::setPlayhead(int ph) {
+
+    sq_sequence_set_playhead(&m_seq, ph);
 
 }
 

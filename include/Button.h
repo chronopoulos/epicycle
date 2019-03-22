@@ -65,6 +65,7 @@ class Indicator : public QWidget
     signals:
         void lBracketSet(int);
         void rBracketSet(int);
+        void playheadRequested(int);
 
 };
 

@@ -39,8 +39,10 @@ class Editor : public QFrame
         void updatePlayhead(int);
         void updateLBracket(int);
         void updateRBracket(int);
+        void setName(QString);
         void setTrig(int, sq_trigger_t*);
         void setTranspose(int);
+        void setPlayhead(int);
         void setClockDivide(int);
         void setMute(QString);
 
