@@ -20,6 +20,8 @@ class SequenceManager : public QFrame
         SequenceManager(void);
         void addEditor(Editor*);
         void clean(void);
+        void advancePhocus(int);
+        void phocusEvent(QKeyEvent*);
 
     private:
         QVBoxLayout *layout;
@@ -27,6 +29,7 @@ class SequenceManager : public QFrame
         bool nullState;
         void setNullState(void);
         std::vector<Editor*> editors;
+        int phocusIndex;
 
     protected:
         void contextMenuEvent(QContextMenuEvent*);

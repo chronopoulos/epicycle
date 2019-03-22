@@ -18,6 +18,9 @@ class Editor : public QFrame
     public:
         Editor(void);
         void clean(void);
+        void setPhocus(bool);
+        void phocusEvent(QKeyEvent*);
+        void advancePhocus(int);
 
     private:
         std::vector<Button*> buttons;
@@ -35,6 +38,9 @@ class Editor : public QFrame
         ClickLabel *nameLabel;
         ClickLabel *transposeLabel, *clockDivLabel, *muteLabel;
 
+        bool m_phocus;
+        int phocusIndex;
+
     public slots:
         void updatePlayhead(int);
         void updateLBracket(int);
@@ -48,6 +54,7 @@ class Editor : public QFrame
 
     protected:
         void contextMenuEvent(QContextMenuEvent*);
+        void paintEvent(QPaintEvent*);
 
 };
 

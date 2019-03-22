@@ -7,7 +7,6 @@
 int Button::Edit_NoteValue = 0;
 int Button::Edit_NoteVelocity = 1;
 
-int SCOPE = 2; // editor scope
 
 Button::Button(int step) {
 
@@ -156,7 +155,7 @@ void Button::paintEvent(QPaintEvent *e) {
     }
 
     QPalette pal = palette();
-    if (m_phocus && (SCOPE == 2)) {
+    if (m_phocus) {
         setLineWidth(3);
         pal.setColor(QPalette::Background, Qt::gray);
     } else {

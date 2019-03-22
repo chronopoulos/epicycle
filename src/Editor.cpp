@@ -47,6 +47,10 @@ Editor::Editor(void) : QFrame() {
         buttons.push_back(tmpButton);
         connect(tmpButton, SIGNAL(trigUpdated(int, sq_trigger_t*)),
                 this, SLOT(setTrig(int, sq_trigger_t*)));
+        if (i==0) {
+            tmpButton->setPhocus(true);
+            phocusIndex = i;
+        }
         midLayout->addWidget(tmpButton);
 
         tmpIndicator = new Indicator(i);
@@ -100,6 +104,25 @@ Editor::Editor(void) : QFrame() {
 
     connect(muteLabel, SIGNAL(valueChanged(QString)), this, SLOT(setMute(QString)));
     connect(notiThread, SIGNAL(muteUpdated(QString)), muteLabel, SLOT(setValue(QString)));
+
+    m_phocus = false;
+
+}
+
+void Editor::paintEvent(QPaintEvent *e) {
+
+    QPalette pal = palette();
+    if (m_phocus) {
+        setLineWidth(3);
+        pal.setColor(QPalette::Background, Qt::green);
+    } else {
+        setLineWidth(1);
+        pal.setColor(QPalette::Background, Qt::cyan);
+    }
+    setAutoFillBackground(true);
+    setPalette(pal);
+
+    QFrame::paintEvent(e);
 
 }
 
@@ -198,6 +221,37 @@ void Editor::contextMenuEvent(QContextMenuEvent*) {
     if (actionIter != actions.end()) {
         int iselected =  std::distance(actions.begin(), actionIter);
         sq_sequence_set_outport(&m_seq, SESSION.outports[iselected]);
+    }
+
+}
+
+void Editor::phocusEvent(QKeyEvent *e) {
+
+    if (e->key() == Qt::Key_L) {
+        advancePhocus(1);
+    } else if (e->key() == Qt::Key_H) {
+        advancePhocus(-1);
+    }
+
+}
+
+void Editor::setPhocus(bool phocus) {
+
+    m_phocus = phocus;
+    update();
+
+}
+
+void Editor::advancePhocus(int increment) {
+
+    if (phocusIndex >= 0) {
+
+        buttons[phocusIndex]->setPhocus(false);
+        phocusIndex = phocusIndex + increment;
+        if (phocusIndex >= m_nsteps) phocusIndex = m_nsteps - 1;
+        if (phocusIndex < 0) phocusIndex = 0;
+        buttons[phocusIndex]->setPhocus(true);
+
     }
 
 }

@@ -58,16 +58,18 @@ void MainWindow::keyPressEvent(QKeyEvent *e) {
     if (!e->isAutoRepeat()) {
 
         if (e->key() == Qt::Key_Space) {
-                togglePlayState();
+            togglePlayState();
         } else if (e->key() == Qt::Key_N) {
-                seqManager->addEditor(new Editor());
+            seqManager->addEditor(new Editor());
         } else if (e->key() == Qt::Key_P) {
-                outportManager->addOutport(new OutportWidget());
+            outportManager->addOutport(new OutportWidget());
         } else if (e->key() == Qt::Key_Q) {
-                inportManager->addInport(new InportWidget());
+            inportManager->addInport(new InportWidget());
         }
 
     }
+
+    seqManager->phocusEvent(e); // phocus events have the possibility of auto-repeat
 
 }
 

@@ -21,6 +21,8 @@ SequenceManager::SequenceManager(void) : QFrame() {
 
     setAcceptDrops(true);
 
+    phocusIndex = -1;
+
 }
 
 void SequenceManager::addEditor(Editor *ed) {
@@ -69,6 +71,43 @@ void SequenceManager::clean(void) {
     std::vector<Editor*>::iterator iter;
     for (iter = editors.begin(); iter != editors.end(); iter++) {
         (*iter)->clean();
+    }
+
+}
+
+void SequenceManager::phocusEvent(QKeyEvent *e) {
+
+    if (e->key() == Qt::Key_J) {
+        advancePhocus(1);
+    } else if (e->key() == Qt::Key_K) {
+        advancePhocus(-1);
+    } else {
+        if (phocusIndex >= 0) {
+            editors[phocusIndex]->phocusEvent(e);
+        }
+    }
+
+}
+
+void SequenceManager::advancePhocus(int increment) {
+
+    int nseqs = (int) editors.size();
+
+    if (nseqs > 0) {
+
+        if (phocusIndex >= 0) {
+            editors[phocusIndex]->setPhocus(false);
+            phocusIndex = phocusIndex + increment;
+            if (phocusIndex >= nseqs) phocusIndex = nseqs - 1;
+            if (phocusIndex < 0) {
+                phocusIndex = 0;
+            }
+        } else {
+            phocusIndex = 0;
+        }
+
+        editors[phocusIndex]->setPhocus(true);
+
     }
 
 }
