@@ -64,10 +64,6 @@ void InportWidget::buildMenu(void) {
     tmpAction->setCheckable(true);
     connect(tmpAction, SIGNAL(toggled(bool)), this, SLOT(checkIt(bool)));
     ag->addAction(tmpAction);
-    tmpAction = modMenu->addAction("Direction");
-    tmpAction->setCheckable(true);
-    connect(tmpAction, SIGNAL(toggled(bool)), this, SLOT(checkIt(bool)));
-    ag->addAction(tmpAction);
     tmpAction = modMenu->addAction("First");
     tmpAction->setCheckable(true);
     connect(tmpAction, SIGNAL(toggled(bool)), this, SLOT(checkIt(bool)));
@@ -77,7 +73,7 @@ void InportWidget::buildMenu(void) {
     connect(tmpAction, SIGNAL(toggled(bool)), this, SLOT(checkIt(bool)));
     ag->addAction(tmpAction);
 
-    seqAction = rcmenu->addAction("set sequences");
+    seqMenu = rcmenu->addMenu("set sequences");
 
 }
 
@@ -93,6 +89,12 @@ void InportWidget::paintEvent(QPaintEvent *e) {
             break;
         case INPORT_PLAYHEAD:
             pal.setColor(QPalette::Background, Qt::darkGreen);
+            break;
+        case INPORT_FIRST:
+            pal.setColor(QPalette::Background, Qt::darkYellow);
+            break;
+        case INPORT_LAST:
+            pal.setColor(QPalette::Background, Qt::darkCyan);
             break;
         case INPORT_CLOCKDIVIDE:
             pal.setColor(QPalette::Background, Qt::magenta);
@@ -120,35 +122,29 @@ void InportWidget::setType(enum inport_type type) {
 
 void InportWidget::mousePressEvent(QMouseEvent *e) {
 
-    std::vector<QAction*> actions;
-
     if (e->buttons() == Qt::RightButton) {
 
-        // select a sequence to add
-        /*
+        std::vector<QAction*> seqActions;
+
         sq_sequence_t *seq;
+        seqMenu->clear();
         for (int i=0; i<SESSION.nseqs; i++) {
             seq = SESSION.seqs[i];
-            actions.push_back(menu.addAction(seq->name));
+            seqActions.push_back(seqMenu->addAction(seq->name));
         }
-        QAction *selectedAction = menu.exec(QCursor::pos());
-        if (selectedAction) {
-            for (int i=0; i<SESSION.nseqs; i++) {
-                if (actions[i] == selectedAction) {
-                    _inport_add_sequence_now(&m_inport, SESSION.seqs[i]);
-                    break;
-                }
-            }
-        }
-        */
 
         QAction *selectedAction;
 
         selectedAction = rcmenu->exec(QCursor::pos());
         if (selectedAction == nameAction) {
             launchNameDialog();
-        } else if (selectedAction == seqAction) {
-            qDebug() << "seq";
+        } else {
+            for (int i=0; i<SESSION.nseqs; i++) {
+                if (seqActions[i] == selectedAction) {
+                    _inport_add_sequence_now(&m_inport, SESSION.seqs[i]);
+                    break;
+                }
+            }
         }
 
     }
@@ -189,8 +185,6 @@ void InportWidget::checkIt(bool checked) {
             setType(INPORT_PLAYHEAD);
         } else if (action->text() == "Clock Divide") {
             setType(INPORT_CLOCKDIVIDE);
-        } else if (action->text() == "Direction") {
-            setType(INPORT_DIRECTION);
         } else if (action->text() == "First") {
             setType(INPORT_FIRST);
         } else if (action->text() == "Last") {

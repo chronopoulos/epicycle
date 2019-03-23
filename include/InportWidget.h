@@ -27,7 +27,7 @@ class InportWidget : public QFrame
         void launchNameDialog(void);
         void buildMenu(void);
 
-        QMenu *rcmenu, *modMenu;
+        QMenu *rcmenu, *modMenu, *seqMenu;
         QAction *nameAction, *seqAction;
 
     protected:
