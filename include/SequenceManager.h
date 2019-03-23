@@ -29,7 +29,7 @@ class SequenceManager : public QFrame
         bool nullState;
         void setNullState(void);
         std::vector<Editor*> editors;
-        int phocusIndex;
+        int phocusIndex, buttonPhocus;
 
     protected:
         void contextMenuEvent(QContextMenuEvent*);

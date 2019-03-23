@@ -122,28 +122,7 @@ void InportWidget::mousePressEvent(QMouseEvent *e) {
 
     std::vector<QAction*> actions;
 
-    if (e->buttons() == Qt::LeftButton) {
-
-        // set the inport type
-        /*
-        actions.push_back(menu.addAction("None"));
-        actions.push_back(menu.addAction("Transpose"));
-        actions.push_back(menu.addAction("Playhead"));
-        actions.push_back(menu.addAction("Clock Divide"));
-        actions.push_back(menu.addAction("Mute"));
-
-        QAction *selectedAction = menu.exec(QCursor::pos());
-
-        if (selectedAction) {
-            if (selectedAction->text() == "None") setType(INPORT_NONE);
-            if (selectedAction->text() == "Transpose") setType(INPORT_TRANSPOSE);
-            if (selectedAction->text() == "Playhead") setType(INPORT_PLAYHEAD);
-            if (selectedAction->text() == "Clock Divide") setType(INPORT_CLOCKDIVIDE);
-            if (selectedAction->text() == "Mute") setType(INPORT_MUTE);
-        }
-        */
-
-    } else if (e->buttons() == Qt::RightButton) {
+    if (e->buttons() == Qt::RightButton) {
 
         // select a sequence to add
         /*

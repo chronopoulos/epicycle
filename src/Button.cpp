@@ -162,7 +162,7 @@ void Button::adjustEditParameter(int increment) {
 
             microtime += (float) increment / 100.;
             if (microtime > 0.45) microtime = 0.45;
-            if (microtime <= -0.5) microtime = 0.1;
+            if (microtime < -0.5) microtime = -0.5;
 
             m_trig.microtime = microtime;
 
@@ -205,12 +205,12 @@ void Button::paintEvent(QPaintEvent *e) {
         } else if (m_editParameter == Button::Edit_NoteVelocity) {
             editText = QString::number(m_trig.velocity);
         } else if (m_editParameter == Button::Edit_NoteLength) {
-            editText = QString::number(m_trig.length);
+            editText = QString::number(m_trig.length, 'f', 2);
         } else if (m_editParameter == Button::Edit_Microtime) {
-            editText = QString::number(m_trig.microtime);
+            editText = QString::number(m_trig.microtime, 'f', 2);
         }
 
-        painter.drawText(QRect(0.3*w,0.5*h,0.4*w,0.2*h), Qt::AlignCenter, editText);
+        painter.drawText(QRect(0.1*w,0.5*h,0.8*w,0.2*h), Qt::AlignCenter, editText);
 
     } else {
 

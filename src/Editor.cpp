@@ -48,10 +48,12 @@ Editor::Editor(void) : QFrame() {
         buttons.push_back(tmpButton);
         connect(tmpButton, SIGNAL(trigUpdated(int, sq_trigger_t*)),
                 this, SLOT(setTrig(int, sq_trigger_t*)));
+        /*
         if (i==0) {
             tmpButton->setPhocus(true);
             phocusIndex = i;
         }
+        */
         midLayout->addWidget(tmpButton);
 
         tmpIndicator = new Indicator(i);
@@ -110,15 +112,19 @@ Editor::Editor(void) : QFrame() {
 
     m_editParameter = Button::Edit_NoteValue;
 
+    phocusIndex = 0;
+
 }
 
 void Editor::paintEvent(QPaintEvent *e) {
 
     QPalette pal = palette();
     if (m_phocus) {
-        pal.setColor(QPalette::Background, Qt::green);
+        //pal.setColor(QPalette::Background, Qt::green);
+        pal.setColor(QPalette::Background, QColor(0,100,100));
     } else {
-        pal.setColor(QPalette::Background, Qt::cyan);
+        //pal.setColor(QPalette::Background, Qt::cyan);
+        pal.setColor(QPalette::Background, QColor(0,50,100));
     }
     setAutoFillBackground(true);
     setPalette(pal);
@@ -286,6 +292,7 @@ void Editor::phocusEvent(QKeyEvent *e) {
 
 void Editor::setPhocus(bool phocus) {
 
+    buttons[phocusIndex]->setPhocus(phocus);
     m_phocus = phocus;
     update();
 

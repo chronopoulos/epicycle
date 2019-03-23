@@ -21,6 +21,7 @@ class Editor : public QFrame
         void setPhocus(bool);
         void phocusEvent(QKeyEvent*);
         void advancePhocus(int);
+        int phocusIndex;
 
     private:
         std::vector<Button*> buttons;
@@ -39,7 +40,6 @@ class Editor : public QFrame
         ClickLabel *transposeLabel, *clockDivLabel, *muteLabel;
 
         bool m_phocus;
-        int phocusIndex;
 
         int m_editParameter;
 

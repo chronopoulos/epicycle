@@ -24,6 +24,8 @@ SequenceManager::SequenceManager(void) : QFrame() {
 
     phocusIndex = -1;
 
+    buttonPhocus = 0;
+
 }
 
 void SequenceManager::addEditor(Editor *ed) {
@@ -102,6 +104,7 @@ void SequenceManager::advancePhocus(int increment) {
     if (nseqs > 0) {
 
         if (phocusIndex >= 0) {
+            buttonPhocus = editors[phocusIndex]->phocusIndex;
             editors[phocusIndex]->setPhocus(false);
             phocusIndex = phocusIndex + increment;
             if (phocusIndex >= nseqs) phocusIndex = nseqs - 1;
@@ -112,6 +115,7 @@ void SequenceManager::advancePhocus(int increment) {
             phocusIndex = 0;
         }
 
+        editors[phocusIndex]->phocusIndex = buttonPhocus; // bad variable names..
         editors[phocusIndex]->setPhocus(true);
 
     }
