@@ -31,6 +31,14 @@ void NotificationThread::run(void) {
             emit playheadUpdated(vi);
         }
 
+        if (sq_sequence_read_new_first(m_seq, &vi)) {
+            emit firstUpdated(vi);
+        }
+
+        if (sq_sequence_read_new_last(m_seq, &vi)) {
+            emit lastUpdated(vi);
+        }
+
         if (sq_sequence_read_new_transpose(m_seq, &vi)) {
             emit transposeUpdated(vi);
         }

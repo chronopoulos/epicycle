@@ -25,6 +25,8 @@ class NotificationThread : public QThread
 
     signals:
         void playheadUpdated(int);
+        void firstUpdated(int);
+        void lastUpdated(int);
         void transposeUpdated(int);
         void clockDivideUpdated(int);
         void muteUpdated(QString);

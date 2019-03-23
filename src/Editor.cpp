@@ -23,8 +23,8 @@ Editor::Editor(void) : QFrame() {
     QHBoxLayout *bottomLayout = new QHBoxLayout();
 
     playheadIndicator = nullptr;
-    lBracketIndicator = nullptr;
-    rBracketIndicator = nullptr;
+    firstIndicator = nullptr;
+    lastIndicator = nullptr;
 
     // ClickLabel's
     nameLabel = new ClickLabel("N: %1", ClickLabel::Type_QString, "Set Name", "Name:");
@@ -48,23 +48,21 @@ Editor::Editor(void) : QFrame() {
         buttons.push_back(tmpButton);
         connect(tmpButton, SIGNAL(trigUpdated(int, sq_trigger_t*)),
                 this, SLOT(setTrig(int, sq_trigger_t*)));
-        /*
-        if (i==0) {
-            tmpButton->setPhocus(true);
-            phocusIndex = i;
-        }
-        */
         midLayout->addWidget(tmpButton);
 
         tmpIndicator = new Indicator(i);
         indicators.push_back(tmpIndicator);
-        connect(tmpIndicator, SIGNAL(lBracketSet(int)), this, SLOT(updateLBracket(int)));
-        connect(tmpIndicator, SIGNAL(rBracketSet(int)), this, SLOT(updateRBracket(int)));
+        connect(tmpIndicator, SIGNAL(firstRequested(int)), this, SLOT(setFirst(int)));
+        connect(tmpIndicator, SIGNAL(lastRequested(int)), this, SLOT(setLast(int)));
         connect(tmpIndicator, SIGNAL(playheadRequested(int)), this, SLOT(setPlayhead(int)));
         if (i==0) {
-            tmpIndicator->setLBracket(true);
+            tmpIndicator->setFirst(true);
+            firstIndicator = tmpIndicator;
         }
-        if (i==(m_nsteps-1)) tmpIndicator->setRBracket(true);
+        if (i==(m_nsteps-1)) {
+            tmpIndicator->setLast(true);
+            lastIndicator = tmpIndicator;
+        }
         bottomLayout->addWidget(tmpIndicator);
 
     }
@@ -80,14 +78,11 @@ Editor::Editor(void) : QFrame() {
 
     sq_sequence_init(&m_seq, 16, 256);
     sq_sequence_set_name(&m_seq, getRandomString(4).toStdString().c_str());
-    //sq_sequence_set_outport(&m_seq, &OUTPORT);
     sq_sequence_set_notifications(&m_seq, true);
     sq_session_add_sequence(&SESSION, &m_seq);
 
     // notifications
     notiThread = new NotificationThread(this, &m_seq);
-    connect(notiThread, SIGNAL(playheadUpdated(int)), this, SLOT(updatePlayhead(int)));
-    notiThread->start();
 
     // initialize the ClickLabel's
     nameLabel->setValue(m_seq.name);
@@ -108,6 +103,13 @@ Editor::Editor(void) : QFrame() {
     connect(muteLabel, SIGNAL(valueChanged(QString)), this, SLOT(setMute(QString)));
     connect(notiThread, SIGNAL(muteUpdated(QString)), muteLabel, SLOT(setValue(QString)));
 
+    // step-wise notifications
+    connect(notiThread, SIGNAL(playheadUpdated(int)), this, SLOT(updatePlayhead(int)));
+    connect(notiThread, SIGNAL(firstUpdated(int)), this, SLOT(updateFirst(int)));
+    connect(notiThread, SIGNAL(lastUpdated(int)), this, SLOT(updateLast(int)));
+
+    notiThread->start();
+
     m_phocus = false;
 
     m_editParameter = Button::Edit_NoteValue;
@@ -119,13 +121,7 @@ Editor::Editor(void) : QFrame() {
 void Editor::paintEvent(QPaintEvent *e) {
 
     QPalette pal = palette();
-    if (m_phocus) {
-        //pal.setColor(QPalette::Background, Qt::green);
-        pal.setColor(QPalette::Background, QColor(0,100,100));
-    } else {
-        //pal.setColor(QPalette::Background, Qt::cyan);
-        pal.setColor(QPalette::Background, QColor(0,50,100));
-    }
+    pal.setColor(QPalette::Background, QColor(0,160,255));
     setAutoFillBackground(true);
     setPalette(pal);
 
@@ -141,20 +137,19 @@ void Editor::updatePlayhead(int step) {
 
 }
 
-void Editor::updateLBracket(int step) {
+void Editor::updateFirst(int step) {
 
-
-    if (lBracketIndicator) lBracketIndicator->setLBracket(false);
-    lBracketIndicator = indicators[step];
-    //emit lBracketChanged(step);
+    if (firstIndicator) firstIndicator->setFirst(false);
+    firstIndicator = indicators[step];
+    firstIndicator->setFirst(true);
 
 }
 
-void Editor::updateRBracket(int step) {
+void Editor::updateLast(int step) {
 
-    if (rBracketIndicator) rBracketIndicator->setRBracket(false);
-    rBracketIndicator = indicators[step];
-    //emit rBracketChanged(step);
+    if (lastIndicator) lastIndicator->setLast(false);
+    lastIndicator = indicators[step];
+    lastIndicator->setLast(true);
 
 }
 
@@ -203,6 +198,18 @@ void Editor::setMute(QString mute) {
     } else {
         sq_sequence_set_mute(&m_seq, false);
     }
+
+}
+
+void Editor::setFirst(int first) {
+
+    sq_sequence_set_first(&m_seq, first);
+
+}
+
+void Editor::setLast(int last) {
+
+    sq_sequence_set_last(&m_seq, last);
 
 }
 

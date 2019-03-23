@@ -52,8 +52,8 @@ class Indicator : public QWidget
     public:
         Indicator(int);
         void setPlayhead(bool);
-        void setLBracket(bool);
-        void setRBracket(bool);
+        void setFirst(bool);
+        void setLast(bool);
 
     private:
         int m_step;
@@ -66,9 +66,9 @@ class Indicator : public QWidget
         void mousePressEvent(QMouseEvent*);
 
     signals:
-        void lBracketSet(int);
-        void rBracketSet(int);
         void playheadRequested(int);
+        void firstRequested(int);
+        void lastRequested(int);
 
 };
 

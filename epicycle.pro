@@ -31,7 +31,7 @@ LIBS += -lsequoia -ljack -L/usr/local/lib
 QMAKE_CXXFLAGS += -std=gnu++0x
 
 # GDB
-#QMAKE_CXXFLAGS += -ggdb
+QMAKE_CXXFLAGS += -ggdb
 
 # Input
 SOURCES += main.cpp

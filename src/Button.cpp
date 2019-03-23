@@ -259,25 +259,17 @@ void Indicator::setPlayhead(bool hasPlayhead) {
 
 }
 
-void Indicator::setLBracket(bool hasLBracket) {
-
-    if (hasLBracket == m_hasLBracket) return;
+void Indicator::setFirst(bool hasLBracket) {
 
     m_hasLBracket = hasLBracket;
     update();
 
-    if (m_hasLBracket) emit lBracketSet(m_step);
-
 }
 
-void Indicator::setRBracket(bool hasRBracket) {
-
-    if (hasRBracket == m_hasRBracket) return;
+void Indicator::setLast(bool hasRBracket) {
 
     m_hasRBracket = hasRBracket;
     update();
-
-    if (m_hasRBracket) emit rBracketSet(m_step);
 
 }
 
@@ -324,10 +316,10 @@ void Indicator::mousePressEvent(QMouseEvent *e) {
         if (QApplication::keyboardModifiers() & Qt::ControlModifier) {
             emit playheadRequested(m_step);
         } else {
-            setLBracket(true);
+            emit firstRequested(m_step);
         }
     } else if (e->buttons() == Qt::RightButton) {
-        setRBracket(true);
+        emit lastRequested(m_step);
     }
 
 }
