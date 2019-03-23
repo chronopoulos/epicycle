@@ -41,6 +41,11 @@ class Editor : public QFrame
         bool m_phocus;
         int phocusIndex;
 
+        int m_editParameter;
+
+        void cycleEditParameter(void);
+        void setEditParameter(int);
+
     public slots:
         void updatePlayhead(int);
         void updateLBracket(int);

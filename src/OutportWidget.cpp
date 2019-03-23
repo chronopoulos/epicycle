@@ -1,6 +1,8 @@
-#include <QVBoxLayout>
-#include <QLabel>
 #include <QPalette>
+#include <QVBoxLayout>
+#include <QMenu>
+#include <QDebug>
+#include <QInputDialog>
 
 #include "OutportWidget.h"
 #include "Helper.h"
@@ -17,11 +19,13 @@ OutportWidget::OutportWidget() : QFrame() {
 
     // sequoia data
 
-    QString name = getRandomString(4);
-    sq_outport_init(&m_outport, name.toStdString().c_str());
+    m_name = getRandomString(4);
+    sq_outport_init(&m_outport, m_name.toStdString().c_str());
     sq_session_register_outport(&SESSION, &m_outport);
 
-    layout->addWidget(new QLabel(name));
+    nameLabel = new QLabel(m_name);
+
+    layout->addWidget(nameLabel);
 
     resize(80, 80);
 
@@ -35,5 +39,30 @@ void OutportWidget::paintEvent(QPaintEvent *e) {
     setPalette(pal);
 
     QFrame::paintEvent(e);
+
+}
+
+void OutportWidget::mousePressEvent(QMouseEvent *e) {
+
+    QMenu menu;
+    QAction *nameAction;
+    QString name;
+    bool ok;
+
+    if (e->buttons() == Qt::RightButton) {
+
+        nameAction = menu.addAction("Set Name");
+        if(menu.exec(QCursor::pos()) == nameAction) {
+            ok = false;
+            name = QInputDialog::getText(this, "outport", "Set Name:", QLineEdit::Normal,
+                                                    m_name, &ok);
+            if (ok) {
+                sq_outport_set_name(&m_outport, name.toStdString().c_str());
+                nameLabel->setText(name);
+                m_name = name;
+            }
+        }
+
+    }
 
 }

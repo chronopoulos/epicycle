@@ -1,4 +1,5 @@
 #include <QDebug>
+#include <QApplication>
 
 #include "SequenceManager.h"
 
@@ -77,14 +78,19 @@ void SequenceManager::clean(void) {
 
 void SequenceManager::phocusEvent(QKeyEvent *e) {
 
-    if (e->key() == Qt::Key_J) {
-        advancePhocus(1);
-    } else if (e->key() == Qt::Key_K) {
-        advancePhocus(-1);
-    } else {
-        if (phocusIndex >= 0) {
-            editors[phocusIndex]->phocusEvent(e);
+    Qt::KeyboardModifiers mod = QApplication::keyboardModifiers();
+
+    if (!(mod & Qt::ControlModifier)) {
+        if (e->key() == Qt::Key_J) {
+            advancePhocus(1);
+        } else if (e->key() == Qt::Key_K) {
+            advancePhocus(-1);
         }
+    }
+    
+
+    if (phocusIndex >= 0) {
+        editors[phocusIndex]->phocusEvent(e);
     }
 
 }

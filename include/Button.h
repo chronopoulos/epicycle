@@ -19,8 +19,11 @@ class Button : public QFrame
 
         static int Edit_NoteValue;
         static int Edit_NoteVelocity;
+        static int Edit_NoteLength;
+        static int Edit_Microtime;
 
         void setPhocus(bool);
+        void phocusEvent(QKeyEvent*);
         void adjustEditParameter(int);
 
     private:

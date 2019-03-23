@@ -4,6 +4,8 @@
 #include <QFrame>
 #include <QPaintEvent>
 #include <QMouseEvent>
+#include <QLabel>
+#include <QMenu>
 
 #include "sequoia.h"
 
@@ -20,10 +22,20 @@ class InportWidget : public QFrame
     private:
         sq_inport_t m_inport;
         enum inport_type m_type;
+        QString m_name;
+        QLabel *nameLabel;
+        void launchNameDialog(void);
+        void buildMenu(void);
+
+        QMenu *rcmenu, *modMenu;
+        QAction *nameAction, *seqAction;
 
     protected:
         void paintEvent(QPaintEvent*);
         void mousePressEvent(QMouseEvent*);
+
+    public slots:
+        void checkIt(bool);
 
 };
 

@@ -6,7 +6,8 @@
 
 int Button::Edit_NoteValue = 0;
 int Button::Edit_NoteVelocity = 1;
-
+int Button::Edit_NoteLength = 2;
+int Button::Edit_Microtime = 3;
 
 Button::Button(int step) {
 
@@ -33,6 +34,45 @@ void Button::setPhocus(bool phocus) {
 
     m_phocus = phocus;
     update();
+
+}
+
+void Button::phocusEvent(QKeyEvent *e) {
+
+    int increment;
+    Qt::KeyboardModifiers mod = QApplication::keyboardModifiers();
+
+    if (mod & Qt::ControlModifier) {
+
+        if (e->key() == Qt::Key_J) {
+
+            if (mod & Qt::ShiftModifier) {
+                increment = -4;
+            } else {
+                increment = -1;
+            }
+
+            adjustEditParameter(increment);
+
+        } else if (e->key() == Qt::Key_K) {
+
+            if (mod & Qt::ShiftModifier) {
+                increment = 4;
+            } else {
+                increment = 1;
+            }
+
+            adjustEditParameter(increment);
+
+        }
+
+    }
+        
+    if ((e->key() == Qt::Key_T) & !(e->modifiers() & Qt::ShiftModifier)) {
+
+            toggle();
+
+    }
 
 }
 
@@ -82,6 +122,7 @@ void Button::wheelEvent(QWheelEvent *e) {
 void Button::adjustEditParameter(int increment) {
 
     int noteValue, noteVelocity;
+    float noteLength, microtime;
 
     if (m_isActive) {
 
@@ -104,6 +145,26 @@ void Button::adjustEditParameter(int increment) {
             if (noteVelocity < 0) noteVelocity = 0;
 
             m_trig.velocity = noteVelocity;
+
+        } else if (m_editParameter == Button::Edit_NoteLength) {
+
+            noteLength = m_trig.length;
+
+            noteLength += (float) increment / 100.;
+            if (noteLength > 15.9) noteLength = 15.9;
+            if (noteLength < 0.1) noteLength = 0.1;
+
+            m_trig.length = noteLength;
+
+        } else if (m_editParameter == Button::Edit_Microtime) {
+
+            microtime = m_trig.microtime;
+
+            microtime += (float) increment / 100.;
+            if (microtime > 0.45) microtime = 0.45;
+            if (microtime <= -0.5) microtime = 0.1;
+
+            m_trig.microtime = microtime;
 
         }
 
@@ -143,6 +204,10 @@ void Button::paintEvent(QPaintEvent *e) {
             editText = QString::number(m_trig.note);
         } else if (m_editParameter == Button::Edit_NoteVelocity) {
             editText = QString::number(m_trig.velocity);
+        } else if (m_editParameter == Button::Edit_NoteLength) {
+            editText = QString::number(m_trig.length);
+        } else if (m_editParameter == Button::Edit_Microtime) {
+            editText = QString::number(m_trig.microtime);
         }
 
         painter.drawText(QRect(0.3*w,0.5*h,0.4*w,0.2*h), Qt::AlignCenter, editText);

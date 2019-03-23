@@ -1,6 +1,7 @@
 #include <QDebug>
 #include <QLabel>
 #include <QMenu>
+#include <QApplication>
 
 #include "Editor.h"
 #include "Helper.h"
@@ -107,16 +108,16 @@ Editor::Editor(void) : QFrame() {
 
     m_phocus = false;
 
+    m_editParameter = Button::Edit_NoteValue;
+
 }
 
 void Editor::paintEvent(QPaintEvent *e) {
 
     QPalette pal = palette();
     if (m_phocus) {
-        setLineWidth(3);
         pal.setColor(QPalette::Background, Qt::green);
     } else {
-        setLineWidth(1);
         pal.setColor(QPalette::Background, Qt::cyan);
     }
     setAutoFillBackground(true);
@@ -225,12 +226,60 @@ void Editor::contextMenuEvent(QContextMenuEvent*) {
 
 }
 
+void Editor::cycleEditParameter(void) {
+
+    int newParameter = Button::Edit_NoteValue;;
+
+    if (m_editParameter == Button::Edit_NoteValue) {
+        newParameter = Button::Edit_NoteVelocity;
+    } else if (m_editParameter == Button::Edit_NoteVelocity){
+        newParameter = Button::Edit_NoteLength;
+    } else if (m_editParameter == Button::Edit_NoteLength){
+        newParameter = Button::Edit_Microtime;
+    } else if (m_editParameter == Button::Edit_Microtime){
+        newParameter = Button::Edit_NoteValue;
+    }
+
+    setEditParameter(newParameter);
+
+}
+
+void Editor::setEditParameter(int parameter) {
+
+    for (int i=0; i<m_nsteps; i++) {
+        buttons[i]->setEditParameter(parameter);
+    }
+
+    m_editParameter = parameter;
+
+}
+
 void Editor::phocusEvent(QKeyEvent *e) {
+
+    Qt::KeyboardModifiers mod = QApplication::keyboardModifiers();
 
     if (e->key() == Qt::Key_L) {
         advancePhocus(1);
     } else if (e->key() == Qt::Key_H) {
         advancePhocus(-1);
+    } else if (e->key() == Qt::Key_Tab) {
+        cycleEditParameter();
+    }
+
+    if (mod & Qt::ShiftModifier) {
+        if (e->key() == Qt::Key_N) {
+            nameLabel->runDialog();
+        } else if (e->key() == Qt::Key_T) {
+            transposeLabel->runDialog();
+        } else if (e->key() == Qt::Key_D) {
+            clockDivLabel->runDialog();
+        } else if (e->key() == Qt::Key_M) {
+            setMute(m_seq.mute ? "False" : "True");
+        }
+    }
+
+    if (phocusIndex >= 0) {
+        buttons[phocusIndex]->phocusEvent(e);
     }
 
 }

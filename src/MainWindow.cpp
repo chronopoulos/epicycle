@@ -1,5 +1,6 @@
 #include <QGridLayout>
 #include <QDebug>
+#include <QApplication>
 
 #include <unistd.h>
 
@@ -55,11 +56,13 @@ void MainWindow::togglePlayState(void) {
 
 void MainWindow::keyPressEvent(QKeyEvent *e) {
 
+    Qt::KeyboardModifiers mod = QApplication::keyboardModifiers();
+
     if (!e->isAutoRepeat()) {
 
         if (e->key() == Qt::Key_Space) {
             togglePlayState();
-        } else if (e->key() == Qt::Key_N) {
+        } else if (e->key() == Qt::Key_N && !(mod & Qt::ShiftModifier)) {
             seqManager->addEditor(new Editor());
         } else if (e->key() == Qt::Key_P) {
             outportManager->addOutport(new OutportWidget());

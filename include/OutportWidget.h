@@ -2,6 +2,7 @@
 #define OUTPORTWIDGET_H
 
 #include <QFrame>
+#include <QLabel>
 #include <QPaintEvent>
 
 #include "sequoia.h"
@@ -17,9 +18,12 @@ class OutportWidget : public QFrame
 
     private:
         sq_outport_t m_outport;
+        QString m_name;
+        QLabel *nameLabel;
 
     protected:
         void paintEvent(QPaintEvent*);
+        void mousePressEvent(QMouseEvent*);
 
 };
 
