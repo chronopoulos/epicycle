@@ -19,7 +19,7 @@ MainWindow::MainWindow() : QWidget() {
 
     // initialize the global SESSION and main OUTPORT
     sq_session_init(&SESSION, "epicycle", TPS);
-    sq_session_set_bpm(&SESSION, 120);
+    sq_session_set_bpm(&SESSION, BPM);
 
     // GUI stuff
 
