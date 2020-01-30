@@ -27,7 +27,7 @@ RCC_DIR = build
 DESTDIR = bin
 
 # Extra flags
-LIBS += -lsequoia -ljack -L/usr/local/lib
+LIBS += -lsequoia -ljack -ljson -L/usr/local/lib
 QMAKE_CXXFLAGS += -std=gnu++0x
 
 # GDB
