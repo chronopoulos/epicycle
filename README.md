@@ -26,19 +26,19 @@ make
 ./bin/epicycle
 ```
 
-N creates a new sequence
-P creates a new outport
-Q creates a new inport
-HJKL navigate around the steps
-T inserts (or removes) a trigger
-Ctrl-JK adjusts the note value
-Shift-N to set the sequence Name
-Shift-T to set the sequence Transpose
-Shift-D to set the sequence clock Divide
-Shift-M to Mute/unMute the sequence
-Spacebar to start/stop the sequence
+N creates a new sequence  
+P creates a new outport  
+Q creates a new inport  
+HJKL navigate around the steps  
+T inserts (or removes) a trigger  
+Ctrl-JK adjusts the note value  
+Shift-N to set the sequence Name  
+Shift-T to set the sequence Transpose  
+Shift-D to set the sequence clock Divide  
+Shift-M to Mute/unMute the sequence  
+Spacebar to start/stop the sequence  
 
-Right-click within the sequence to select the outport
-Right-click on the outport to set its name
-Right-click on the inport to set its various parameters
-First/Last step can be set by left/right-clicking under the steps
+Right-click within the sequence to select the outport  
+Right-click on the outport to set its name  
+Right-click on the inport to set its various parameters  
+First/Last step can be set by left/right-clicking under the steps  
