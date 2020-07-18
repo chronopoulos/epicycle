@@ -9,6 +9,9 @@
 #include <QApplication>
 
 #include "MainWindow.h"
+#include "Delta.h"
+
+Delta DELTA;
 
 int main(int argc, char *argv[]) {
 

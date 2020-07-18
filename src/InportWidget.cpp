@@ -5,8 +5,10 @@
 
 #include "InportWidget.h"
 #include "Helper.h"
+#include "Delta.h"
 
 extern sq_session_t SESSION;
+extern Delta DELTA;
 
 InportWidget::InportWidget() : QFrame() {
 
@@ -20,6 +22,7 @@ InportWidget::InportWidget() : QFrame() {
     m_name = getRandomString(4);
     sq_inport_init(&m_inport,m_name.toStdString().c_str());
     sq_session_register_inport(&SESSION, &m_inport);
+    DELTA.setState(true);
 
     nameLabel = new QLabel(m_name);
 
@@ -115,6 +118,7 @@ void InportWidget::paintEvent(QPaintEvent *e) {
 void InportWidget::setType(enum inport_type type) {
 
     sq_inport_set_type(&m_inport, type);
+    DELTA.setState(true);
     m_type = type;
     update();
 
@@ -142,6 +146,7 @@ void InportWidget::mousePressEvent(QMouseEvent *e) {
             for (int i=0; i<SESSION.nseqs; i++) {
                 if (seqActions[i] == selectedAction) {
                     _inport_add_sequence_now(&m_inport, SESSION.seqs[i]);
+                    DELTA.setState(true);
                     break;
                 }
             }
@@ -161,6 +166,7 @@ void InportWidget::launchNameDialog(void) {
                                             m_name, &ok);
     if (ok) {
         sq_inport_set_name(&m_inport, name.toStdString().c_str());
+        DELTA.setState(true);
         nameLabel->setText(name);
         m_name = name;
     }

@@ -16,8 +16,12 @@ class MainWindow : public QWidget
 
     public:
         MainWindow();
+        bool save(void);
+        bool save(const QString&);
+        bool saveAs(void);
 
         void togglePlayState(void);
+        QString sessionFile;
 
     private:
         QHBoxLayout *layout;
@@ -27,10 +31,15 @@ class MainWindow : public QWidget
         OutportManager *outportManager;
 
         int transport;
+        bool uninitialized;
 
     protected:
         void keyPressEvent(QKeyEvent*);
         void closeEvent(QCloseEvent*);
 
+    public slots:
+        void handleDelta(bool);
+
 
 };
+

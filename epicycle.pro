@@ -46,6 +46,8 @@ SOURCES += Button.cpp
 SOURCES += NotificationThread.cpp
 SOURCES += ClickLabel.cpp
 SOURCES += Helper.cpp
+SOURCES += Delta.cpp
+SOURCES += Dialogs.cpp
 
 HEADERS += MainWindow.h
 HEADERS += SequenceManager.h
@@ -58,6 +60,8 @@ HEADERS += Button.h
 HEADERS += NotificationThread.h
 HEADERS += ClickLabel.h
 HEADERS += Helper.h
+HEADERS += Delta.h
+HEADERS += Dialogs.h
 
 RESOURCES = epicycle.qrc
 

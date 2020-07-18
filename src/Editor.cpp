@@ -5,8 +5,10 @@
 
 #include "Editor.h"
 #include "Helper.h"
+#include "Delta.h"
 
 extern sq_session_t SESSION;
+extern Delta DELTA;
 
 Editor::Editor(void) : QFrame() {
 
@@ -80,6 +82,9 @@ Editor::Editor(void) : QFrame() {
     sq_sequence_set_name(&m_seq, getRandomString(4).toStdString().c_str());
     sq_sequence_set_notifications(&m_seq, true);
     sq_session_add_sequence(&SESSION, &m_seq);
+
+    // record state change
+    DELTA.setState(true);
 
     // notifications
     notiThread = new NotificationThread(this, &m_seq);
@@ -164,30 +169,35 @@ void Editor::setName(QString name) {
 
     sq_sequence_set_name(&m_seq, name.toStdString().c_str());
     nameLabel->setValue(name); // there are no notifications for name changes
+    DELTA.setState(true);
 
 }
 
 void Editor::setTrig(int step, sq_trigger_t *trig) {
 
     sq_sequence_set_trig(&m_seq, step, trig);
+    DELTA.setState(true);
 
 }
 
 void Editor::setTranspose(int transpose) {
 
     sq_sequence_set_transpose(&m_seq, transpose);
+    DELTA.setState(true);
 
 }
 
 void Editor::setPlayhead(int ph) {
 
     sq_sequence_set_playhead(&m_seq, ph);
+    DELTA.setState(true);
 
 }
 
 void Editor::setClockDivide(int div) {
 
     sq_sequence_set_clockdivide(&m_seq, div);
+    DELTA.setState(true);
 
 }
 
@@ -199,17 +209,23 @@ void Editor::setMute(QString mute) {
         sq_sequence_set_mute(&m_seq, false);
     }
 
+    DELTA.setState(true);
+
 }
 
 void Editor::setFirst(int first) {
 
     sq_sequence_set_first(&m_seq, first);
 
+    DELTA.setState(true);
+
 }
 
 void Editor::setLast(int last) {
 
     sq_sequence_set_last(&m_seq, last);
+
+    DELTA.setState(true);
 
 }
 
@@ -235,6 +251,7 @@ void Editor::contextMenuEvent(QContextMenuEvent*) {
     if (actionIter != actions.end()) {
         int iselected =  std::distance(actions.begin(), actionIter);
         sq_sequence_set_outport(&m_seq, SESSION.outports[iselected]);
+        DELTA.setState(true);
     }
 
 }

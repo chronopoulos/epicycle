@@ -1,6 +1,8 @@
 #include <QGridLayout>
 #include <QDebug>
 #include <QApplication>
+#include <QDir>
+#include <QFileDialog>
 
 #include <unistd.h>
 
@@ -9,11 +11,15 @@
 #include "MainWindow.h"
 #include "Editor.h"
 #include "OutportWidget.h"
+#include "Dialogs.h"
+#include "Delta.h"
 
 #define TPS 256
 #define BPM 120
 
 sq_session_t SESSION;
+
+extern Delta DELTA;
 
 MainWindow::MainWindow() : QWidget() {
 
@@ -36,12 +42,32 @@ MainWindow::MainWindow() : QWidget() {
     this->setLayout(layout);
     this->setWindowTitle("epicycle");
 
+    connect(&DELTA, SIGNAL(stateChanged(bool)), this, SLOT(handleDelta(bool)));
+
+    DELTA.setState(false);
+
     resize(700,700);
 
     transport = STOPPED;
 
+    sessionFile = QDir::homePath().append("/untitled.sqa");
+    uninitialized = true;
+
 }
 
+void MainWindow::handleDelta(bool delta) {
+
+    if (delta) {
+
+        setWindowTitle(QString("epicycle*"));
+
+    } else {
+
+        setWindowTitle(QString("epicycle"));
+
+    }
+
+}
 void MainWindow::togglePlayState(void) {
 
     if ((transport == STOPPED) || (transport == PAUSED)) {
@@ -68,6 +94,12 @@ void MainWindow::keyPressEvent(QKeyEvent *e) {
             outportManager->addOutport(new OutportWidget());
         } else if (e->key() == Qt::Key_Q) {
             inportManager->addInport(new InportWidget());
+        } else if (e->key() == Qt::Key_S && (mod & Qt::ControlModifier)) {
+            if (mod & Qt::ShiftModifier) {
+                saveAs();
+            } else {
+                save();
+            }
         }
 
     }
@@ -76,8 +108,77 @@ void MainWindow::keyPressEvent(QKeyEvent *e) {
 
 }
 
-void MainWindow::closeEvent(QCloseEvent*) {
+void MainWindow::closeEvent(QCloseEvent *e) {
 
     seqManager->clean();
 
+    if (DELTA.state()) { // if there are changes, then ask to save
+
+        MaybeSaveDialog dlg;
+        switch (dlg.exec()) {
+            case -1: // Discard
+                e->accept();
+                break;
+            case 0: // Cancel
+                e->ignore();
+                break;
+            case 1: // Save
+                if (save()) {
+                    e->accept();
+                } else {
+                    e->ignore();
+                }
+                break;
+        }
+
+    } else { // otherwise, just close
+
+        e->accept();
+
+    }
+
 }
+
+bool MainWindow::save(void) {
+
+    if (uninitialized) {
+        return saveAs();
+    } else {
+        return save(sessionFile);
+    }
+
+}
+
+bool MainWindow::save(const QString &filename) {
+
+    // open file
+    QFile saveFile(filename);
+    if (!saveFile.open(QIODevice::WriteOnly)) {
+
+        qWarning("Couldn't open save file.");
+        return false; // TODO present warning dialog
+
+    }
+
+    sq_session_save(&SESSION, filename.toStdString().c_str());
+
+    // reset flags
+    sessionFile = filename;
+    DELTA.setState(false);
+    uninitialized = false;
+
+    return true;
+
+}
+
+bool MainWindow::saveAs(void) {
+
+    QString filename = QFileDialog::getSaveFileName(Q_NULLPTR, "Save Session", sessionFile);
+    if (filename.isNull()) {
+        return false;
+    }
+
+    return save(filename);
+
+}
+
