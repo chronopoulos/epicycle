@@ -17,15 +17,15 @@
 #define TPS 256
 #define BPM 120
 
-sq_session_t SESSION;
+sq_session_t *SESSION;
 
 extern Delta DELTA;
 
 MainWindow::MainWindow() : QWidget() {
 
     // initialize the global SESSION and main OUTPORT
-    sq_session_init(&SESSION, "epicycle", TPS);
-    sq_session_set_bpm(&SESSION, BPM);
+    SESSION = sq_session_new("epicycle", TPS);
+    sq_session_set_bpm(SESSION, BPM);
 
     // GUI stuff
 
@@ -71,10 +71,10 @@ void MainWindow::handleDelta(bool delta) {
 void MainWindow::togglePlayState(void) {
 
     if ((transport == STOPPED) || (transport == PAUSED)) {
-        sq_session_start(&SESSION);
+        sq_session_start(SESSION);
         transport = PLAYING;
     } else if (transport == PLAYING) {
-        sq_session_stop(&SESSION);
+        sq_session_stop(SESSION);
         transport = STOPPED;
     }
 
@@ -174,7 +174,7 @@ bool MainWindow::save(const QString &filename) {
 
     }
 
-    sq_session_save(&SESSION, filename.toStdString().c_str());
+    sq_session_save(SESSION, filename.toStdString().c_str());
 
     // reset flags
     sessionFile = filename;
@@ -250,11 +250,11 @@ void MainWindow::load(const QString &filename) {
 void MainWindow::clearSession(void) {
 
     if (!((transport == STOPPED) || (transport == PAUSED))) {
-        sq_session_stop(&SESSION);
+        sq_session_stop(SESSION);
         transport = STOPPED;
     }
 
-    sq_session_disconnect_jack(&SESSION);
+    sq_session_disconnect_jack(SESSION);
 
     seqManager->clean(); // this stops the noti threads
     seqManager->removeAllEditors();

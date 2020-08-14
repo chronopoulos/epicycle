@@ -20,7 +20,7 @@ class InportWidget : public QFrame
         void setType(enum inport_type);
 
     private:
-        sq_inport_t m_inport;
+        sq_inport_t *m_inport;
         enum inport_type m_type;
         QString m_name;
         QLabel *nameLabel;

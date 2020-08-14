@@ -7,7 +7,7 @@
 #include "Helper.h"
 #include "Delta.h"
 
-extern sq_session_t SESSION;
+extern sq_session_t *SESSION;
 extern Delta DELTA;
 
 Editor::Editor(void) : QFrame() {
@@ -78,22 +78,22 @@ Editor::Editor(void) : QFrame() {
 
     // sequoia data
 
-    sq_sequence_init(&m_seq, 16, 256);
-    sq_sequence_set_name(&m_seq, getRandomString(4).toStdString().c_str());
-    sq_sequence_set_notifications(&m_seq, true);
-    sq_session_add_sequence(&SESSION, &m_seq);
+    m_seq = sq_sequence_new(16, 256);
+    sq_sequence_set_name(m_seq, getRandomString(4).toStdString().c_str());
+    sq_sequence_set_notifications(m_seq, true);
+    sq_session_add_sequence(SESSION, m_seq);
 
     // record state change
     DELTA.setState(true);
 
     // notifications
-    notiThread = new NotificationThread(this, &m_seq);
+    notiThread = new NotificationThread(this, m_seq);
 
     // initialize the ClickLabel's
-    nameLabel->setValue(m_seq.name);
-    transposeLabel->setValue(m_seq.transpose);
-    clockDivLabel->setValue(m_seq.div);
-    muteLabel->setValue(m_seq.mute ? "True" : "False");
+    nameLabel->setValue(m_seq->name);
+    transposeLabel->setValue(m_seq->transpose);
+    clockDivLabel->setValue(m_seq->div);
+    muteLabel->setValue(m_seq->mute ? "True" : "False");
 
     // connect the click labels
 
@@ -167,7 +167,7 @@ void Editor::clean(void) {
 
 void Editor::setName(QString name) {
 
-    sq_sequence_set_name(&m_seq, name.toStdString().c_str());
+    sq_sequence_set_name(m_seq, name.toStdString().c_str());
     nameLabel->setValue(name); // there are no notifications for name changes
     DELTA.setState(true);
 
@@ -175,28 +175,28 @@ void Editor::setName(QString name) {
 
 void Editor::setTrig(int step, sq_trigger_t *trig) {
 
-    sq_sequence_set_trig(&m_seq, step, trig);
+    sq_sequence_set_trig(m_seq, step, trig);
     DELTA.setState(true);
 
 }
 
 void Editor::setTranspose(int transpose) {
 
-    sq_sequence_set_transpose(&m_seq, transpose);
+    sq_sequence_set_transpose(m_seq, transpose);
     DELTA.setState(true);
 
 }
 
 void Editor::setPlayhead(int ph) {
 
-    sq_sequence_set_playhead(&m_seq, ph);
+    sq_sequence_set_playhead(m_seq, ph);
     DELTA.setState(true);
 
 }
 
 void Editor::setClockDivide(int div) {
 
-    sq_sequence_set_clockdivide(&m_seq, div);
+    sq_sequence_set_clockdivide(m_seq, div);
     DELTA.setState(true);
 
 }
@@ -204,9 +204,9 @@ void Editor::setClockDivide(int div) {
 void Editor::setMute(QString mute) {
 
     if (mute == "True") {
-        sq_sequence_set_mute(&m_seq, true);
+        sq_sequence_set_mute(m_seq, true);
     } else {
-        sq_sequence_set_mute(&m_seq, false);
+        sq_sequence_set_mute(m_seq, false);
     }
 
     DELTA.setState(true);
@@ -215,7 +215,7 @@ void Editor::setMute(QString mute) {
 
 void Editor::setFirst(int first) {
 
-    sq_sequence_set_first(&m_seq, first);
+    sq_sequence_set_first(m_seq, first);
 
     DELTA.setState(true);
 
@@ -223,7 +223,7 @@ void Editor::setFirst(int first) {
 
 void Editor::setLast(int last) {
 
-    sq_sequence_set_last(&m_seq, last);
+    sq_sequence_set_last(m_seq, last);
 
     DELTA.setState(true);
 
@@ -239,8 +239,8 @@ void Editor::contextMenuEvent(QContextMenuEvent*) {
     // kind of a dirty way to select the outport, but it works
 
     sq_outport_t *outport;
-    for (int i=0; i<SESSION.noutports; i++) {
-        outport = SESSION.outports[i];
+    for (int i=0; i<SESSION->noutports; i++) {
+        outport = SESSION->outports[i];
         actions.push_back(menu.addAction(outport->name));
     }
 
@@ -250,7 +250,7 @@ void Editor::contextMenuEvent(QContextMenuEvent*) {
     actionIter = std::find(actions.begin(), actions.end(), selectedAction);
     if (actionIter != actions.end()) {
         int iselected =  std::distance(actions.begin(), actionIter);
-        sq_sequence_set_outport(&m_seq, SESSION.outports[iselected]);
+        sq_sequence_set_outport(m_seq, SESSION->outports[iselected]);
         DELTA.setState(true);
     }
 
@@ -304,7 +304,7 @@ void Editor::phocusEvent(QKeyEvent *e) {
         } else if (e->key() == Qt::Key_D) {
             clockDivLabel->runDialog();
         } else if (e->key() == Qt::Key_M) {
-            setMute(m_seq.mute ? "False" : "True");
+            setMute(m_seq->mute ? "False" : "True");
         }
     }
 

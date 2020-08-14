@@ -32,7 +32,7 @@ class Editor : public QFrame
         Indicator *firstIndicator;
         Indicator *lastIndicator;
 
-        sq_sequence_t m_seq;
+        sq_sequence_t *m_seq;
 
         NotificationThread *notiThread;
 

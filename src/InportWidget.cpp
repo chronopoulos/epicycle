@@ -7,7 +7,7 @@
 #include "Helper.h"
 #include "Delta.h"
 
-extern sq_session_t SESSION;
+extern sq_session_t *SESSION;
 extern Delta DELTA;
 
 InportWidget::InportWidget() : QFrame() {
@@ -20,15 +20,15 @@ InportWidget::InportWidget() : QFrame() {
 
     // sequoia data
     m_name = getRandomString(4);
-    sq_inport_init(&m_inport,m_name.toStdString().c_str());
-    sq_session_register_inport(&SESSION, &m_inport);
+    m_inport = sq_inport_new(m_name.toStdString().c_str());
+    sq_session_register_inport(SESSION, m_inport);
     DELTA.setState(true);
 
     nameLabel = new QLabel(m_name);
 
     layout->addWidget(nameLabel);
 
-    m_type = m_inport.type;
+    m_type = m_inport->type;
 
     resize(80, 80);
 
@@ -117,7 +117,7 @@ void InportWidget::paintEvent(QPaintEvent *e) {
 
 void InportWidget::setType(enum inport_type type) {
 
-    sq_inport_set_type(&m_inport, type);
+    sq_inport_set_type(m_inport, type);
     DELTA.setState(true);
     m_type = type;
     update();
@@ -132,8 +132,8 @@ void InportWidget::mousePressEvent(QMouseEvent *e) {
 
         sq_sequence_t *seq;
         seqMenu->clear();
-        for (int i=0; i<SESSION.nseqs; i++) {
-            seq = SESSION.seqs[i];
+        for (int i=0; i<SESSION->nseqs; i++) {
+            seq = SESSION->seqs[i];
             seqActions.push_back(seqMenu->addAction(seq->name));
         }
 
@@ -143,9 +143,9 @@ void InportWidget::mousePressEvent(QMouseEvent *e) {
         if (selectedAction == nameAction) {
             launchNameDialog();
         } else {
-            for (int i=0; i<SESSION.nseqs; i++) {
+            for (int i=0; i<SESSION->nseqs; i++) {
                 if (seqActions[i] == selectedAction) {
-                    _inport_add_sequence_now(&m_inport, SESSION.seqs[i]);
+                    _inport_add_sequence_now(m_inport, SESSION->seqs[i]);
                     DELTA.setState(true);
                     break;
                 }
@@ -165,7 +165,7 @@ void InportWidget::launchNameDialog(void) {
     name = QInputDialog::getText(this, "inport", "Set Name:", QLineEdit::Normal,
                                             m_name, &ok);
     if (ok) {
-        sq_inport_set_name(&m_inport, name.toStdString().c_str());
+        sq_inport_set_name(m_inport, name.toStdString().c_str());
         DELTA.setState(true);
         nameLabel->setText(name);
         m_name = name;
