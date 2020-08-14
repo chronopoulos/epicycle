@@ -9,22 +9,22 @@ int Button::Edit_NoteVelocity = 1;
 int Button::Edit_NoteLength = 2;
 int Button::Edit_Microtime = 3;
 
-Button::Button(int step) {
+Button::Button(int step, sq_trigger_t *trig) {
 
     m_step = step;
+    //m_trig = trig;   // memcpy?
+    memcpy(&m_trig, trig, sizeof(sq_trigger_t));
 
     setMinimumSize(50,50);
     setMaximumSize(50,50);
 
-    m_isActive = false;
+    m_isActive = (m_trig.type == TRIG_NOTE);
 
     m_editParameter = Button::Edit_NoteValue;
 
     setFrameStyle(QFrame::Box | QFrame::Plain);
 
     setPhocus(false);
-
-    sq_trigger_init(&m_trig);
 
     setContextMenuPolicy(Qt::PreventContextMenu);
 

@@ -14,6 +14,7 @@ class Button : public QFrame
 
     public:
         Button(int);
+        Button(int, sq_trigger_t*);
         void toggle(void);
         void setEditParameter(int);
 

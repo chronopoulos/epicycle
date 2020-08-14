@@ -10,19 +10,16 @@
 extern sq_session_t *SESSION;
 extern Delta DELTA;
 
-InportWidget::InportWidget() : QFrame() {
+InportWidget::InportWidget(sq_inport_t *inport) : QFrame() {
+
+    m_inport = inport;
+    m_name = QString(inport->name);
 
     setFrameStyle(QFrame::Box | QFrame::Plain);
     setLineWidth(2);
 
     QVBoxLayout *layout = new QVBoxLayout();
     setLayout(layout);
-
-    // sequoia data
-    m_name = getRandomString(4);
-    m_inport = sq_inport_new(m_name.toStdString().c_str());
-    sq_session_register_inport(SESSION, m_inport);
-    DELTA.setState(true);
 
     nameLabel = new QLabel(m_name);
 

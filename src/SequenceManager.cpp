@@ -2,6 +2,7 @@
 #include <QApplication>
 
 #include "SequenceManager.h"
+#include "Helper.h"
 
 SequenceManager::SequenceManager(void) : QFrame() {
 
@@ -62,7 +63,7 @@ void SequenceManager::contextMenuEvent(QContextMenuEvent*) {
     QAction *action = menu.exec(QCursor::pos());
     if (action == addSeqAction) {
 
-        addEditor(new Editor());
+        addEditor(new Editor(newDefaultSequence()));
 
     }
 

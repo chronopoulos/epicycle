@@ -10,7 +10,9 @@
 extern sq_session_t *SESSION;
 extern Delta DELTA;
 
-Editor::Editor(void) : QFrame() {
+Editor::Editor(sq_sequence_t *seq) : QFrame() {
+
+    m_seq = seq;
 
     // UI stuff
 
@@ -46,26 +48,30 @@ Editor::Editor(void) : QFrame() {
     Indicator *tmpIndicator;
     for (int i=0; i < m_nsteps; i++) {
 
-        tmpButton = new Button(i);
+        // create and add button
+        tmpButton = new Button(i, &m_seq->trigs[i]);
         buttons.push_back(tmpButton);
-        connect(tmpButton, SIGNAL(trigUpdated(int, sq_trigger_t*)),
-                this, SLOT(setTrig(int, sq_trigger_t*)));
         midLayout->addWidget(tmpButton);
 
+        // create and add indicator
         tmpIndicator = new Indicator(i);
         indicators.push_back(tmpIndicator);
-        connect(tmpIndicator, SIGNAL(firstRequested(int)), this, SLOT(setFirst(int)));
-        connect(tmpIndicator, SIGNAL(lastRequested(int)), this, SLOT(setLast(int)));
-        connect(tmpIndicator, SIGNAL(playheadRequested(int)), this, SLOT(setPlayhead(int)));
-        if (i==0) {
+        if (i==m_seq->first) {
             tmpIndicator->setFirst(true);
             firstIndicator = tmpIndicator;
         }
-        if (i==(m_nsteps-1)) {
+        if (i==(m_seq->last)) {
             tmpIndicator->setLast(true);
             lastIndicator = tmpIndicator;
         }
         bottomLayout->addWidget(tmpIndicator);
+
+        // connect them up
+        connect(tmpButton, SIGNAL(trigUpdated(int, sq_trigger_t*)),
+                this, SLOT(setTrig(int, sq_trigger_t*)));
+        connect(tmpIndicator, SIGNAL(firstRequested(int)), this, SLOT(setFirst(int)));
+        connect(tmpIndicator, SIGNAL(lastRequested(int)), this, SLOT(setLast(int)));
+        connect(tmpIndicator, SIGNAL(playheadRequested(int)), this, SLOT(setPlayhead(int)));
 
     }
 
@@ -75,16 +81,6 @@ Editor::Editor(void) : QFrame() {
     setLayout(layout);
 
     updatePlayhead(0);
-
-    // sequoia data
-
-    m_seq = sq_sequence_new(16, 256);
-    sq_sequence_set_name(m_seq, getRandomString(4).toStdString().c_str());
-    sq_sequence_set_notifications(m_seq, true);
-    sq_session_add_sequence(SESSION, m_seq);
-
-    // record state change
-    DELTA.setState(true);
 
     // notifications
     notiThread = new NotificationThread(this, m_seq);

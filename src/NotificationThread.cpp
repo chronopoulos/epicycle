@@ -28,6 +28,7 @@ void NotificationThread::run(void) {
         mtx_running.unlock();
 
         if (sq_sequence_read_new_playhead(m_seq, &vi)) {
+
             emit playheadUpdated(vi);
         }
 

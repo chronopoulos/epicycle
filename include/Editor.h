@@ -16,7 +16,7 @@ class Editor : public QFrame
     Q_OBJECT
 
     public:
-        Editor(void);
+        Editor(sq_sequence_t*);
         void clean(void);
         void setPhocus(bool);
         void phocusEvent(QKeyEvent*);

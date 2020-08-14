@@ -4,8 +4,7 @@
 #include <QDir>
 #include <QFileDialog>
 
-#include <unistd.h>
-
+#include <unistd.h> 
 #include "sequoia.h"
 
 #include "MainWindow.h"
@@ -13,6 +12,7 @@
 #include "OutportWidget.h"
 #include "Dialogs.h"
 #include "Delta.h"
+#include "Helper.h"
 
 #define TPS 256
 #define BPM 120
@@ -92,15 +92,18 @@ void MainWindow::keyPressEvent(QKeyEvent *e) {
 
         } else if (e->key() == Qt::Key_N && !(mod & Qt::ShiftModifier)) {
 
-            seqManager->addEditor(new Editor());
+            seqManager->addEditor(new Editor(newDefaultSequence()));
+            DELTA.setState(true);
 
         } else if (e->key() == Qt::Key_P) {
 
-            outportManager->addOutport(new OutportWidget());
+            outportManager->addOutport(new OutportWidget(newDefaultOutport()));
+            DELTA.setState(true);
 
         } else if (e->key() == Qt::Key_Q) {
 
-            inportManager->addInport(new InportWidget());
+            inportManager->addInport(new InportWidget(newDefaultInport()));
+            DELTA.setState(true);
 
         } else if (e->key() == Qt::Key_S && (mod & Qt::ControlModifier)) {
 
@@ -217,8 +220,6 @@ void MainWindow::load(void) {
 
     }
 
-    // TODO teardown current session (if there is one)
-
     QString filename = QFileDialog::getOpenFileName(Q_NULLPTR, "Open Session", QDir::homePath());
 
     if (!filename.isNull()) {
@@ -229,32 +230,37 @@ void MainWindow::load(void) {
 
 void MainWindow::load(const QString &filename) {
 
-    // open file
-    QFile loadFile(filename);
-    if (!loadFile.open(QIODevice::ReadOnly)) {
-
-        qWarning("Couldn't open load file."); // TODO present warning dialog
-        return;
-
-    }
+    // tear down the current session
+    clearSession();
 
     // TODO check if format is correct
 
-    // clear out the current session
-    clearSession();
-
     // load the new one
+    SESSION = sq_session_load(filename.toStdString().c_str());
+
+    // now build the GUI up from the sequoia session
+    for (int i=0; i<SESSION->nseqs; i++) {
+        sq_sequence_set_notifications(SESSION->seqs[i], true);
+        seqManager->addEditor(new Editor(SESSION->seqs[i]));
+    }
+    for (int i=0; i<SESSION->ninports; i++) {
+        inportManager->addInport(new InportWidget(SESSION->inports[i]));
+    }
+    for (int i=0; i<SESSION->noutports; i++) {
+        outportManager->addOutport(new OutportWidget(SESSION->outports[i]));
+    }
+
+    DELTA.setState(false);
 
 }
 
 void MainWindow::clearSession(void) {
 
     if (!((transport == STOPPED) || (transport == PAUSED))) {
-        sq_session_stop(SESSION);
         transport = STOPPED;
     }
 
-    sq_session_disconnect_jack(SESSION);
+    sq_session_teardown(SESSION);
 
     seqManager->clean(); // this stops the noti threads
     seqManager->removeAllEditors();

@@ -16,7 +16,7 @@ class InportWidget : public QFrame
     Q_OBJECT
 
     public:
-        InportWidget(void);
+        InportWidget(sq_inport_t*);
         void setType(enum inport_type);
 
     private:

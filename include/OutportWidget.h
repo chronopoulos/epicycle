@@ -7,14 +7,12 @@
 
 #include "sequoia.h"
 
-#include "OutportWidget.h"
-
 class OutportWidget : public QFrame
 {
     Q_OBJECT
 
     public:
-        OutportWidget(void);
+        OutportWidget(sq_outport_t*);
 
     private:
         sq_outport_t *m_outport;
