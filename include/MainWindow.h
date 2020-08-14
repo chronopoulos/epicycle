@@ -19,6 +19,9 @@ class MainWindow : public QWidget
         bool save(void);
         bool save(const QString&);
         bool saveAs(void);
+        void load(void);
+        void load(const QString&);
+        void clearSession(void);
 
         void togglePlayState(void);
         QString sessionFile;

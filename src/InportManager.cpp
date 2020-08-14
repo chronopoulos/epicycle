@@ -23,3 +23,15 @@ void InportManager::addInport(InportWidget *inport) {
     inports.push_back(inport);
 
 }
+
+void InportManager::removeAllInports(void) {
+
+    std::vector<InportWidget*>::iterator iter;
+    for (iter = inports.begin(); iter != inports.end(); iter++) {
+        layout->removeWidget(*iter);
+        (*iter)->setVisible(false);
+        delete *iter;
+    }
+
+}
+

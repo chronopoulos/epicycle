@@ -13,6 +13,7 @@ class OutportManager : public QFrame
     public:
         OutportManager(void);
         void addOutport(OutportWidget*);
+        void removeAllOutports(void);
 
     private:
         QVBoxLayout *layout;

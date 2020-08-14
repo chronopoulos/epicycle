@@ -22,6 +22,7 @@ class SequenceManager : public QFrame
         void clean(void);
         void advancePhocus(int);
         void phocusEvent(QKeyEvent*);
+        void removeAllEditors(void);
 
     private:
         QVBoxLayout *layout;

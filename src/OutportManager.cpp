@@ -23,3 +23,14 @@ void OutportManager::addOutport(OutportWidget *outport) {
     outports.push_back(outport);
 
 }
+
+void OutportManager::removeAllOutports(void) {
+
+    std::vector<OutportWidget*>::iterator iter;
+    for (iter = outports.begin(); iter != outports.end(); iter++) {
+        layout->removeWidget(*iter);
+        (*iter)->setVisible(false);
+        delete *iter;
+    }
+
+}

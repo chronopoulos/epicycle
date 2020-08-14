@@ -87,19 +87,33 @@ void MainWindow::keyPressEvent(QKeyEvent *e) {
     if (!e->isAutoRepeat()) {
 
         if (e->key() == Qt::Key_Space) {
+
             togglePlayState();
+
         } else if (e->key() == Qt::Key_N && !(mod & Qt::ShiftModifier)) {
+
             seqManager->addEditor(new Editor());
+
         } else if (e->key() == Qt::Key_P) {
+
             outportManager->addOutport(new OutportWidget());
+
         } else if (e->key() == Qt::Key_Q) {
+
             inportManager->addInport(new InportWidget());
+
         } else if (e->key() == Qt::Key_S && (mod & Qt::ControlModifier)) {
+
             if (mod & Qt::ShiftModifier) {
                 saveAs();
             } else {
                 save();
             }
+
+        } else if (e->key() == Qt::Key_O && (mod & Qt::ControlModifier)) {
+
+            load();
+
         }
 
     }
@@ -179,6 +193,74 @@ bool MainWindow::saveAs(void) {
     }
 
     return save(filename);
+
+}
+
+void MainWindow::load(void) {
+
+    // if there are changes to be saved, ask to save them
+    if (DELTA.state()) {
+
+        MaybeSaveDialog dlg;
+        switch (dlg.exec()) {
+            case -1: // Discard
+                break;
+            case 0: // Cancel
+                return;
+            case 1: // Save
+                if (save()) {
+                    break;
+                } else {
+                    return;
+                }
+        }
+
+    }
+
+    // TODO teardown current session (if there is one)
+
+    QString filename = QFileDialog::getOpenFileName(Q_NULLPTR, "Open Session", QDir::homePath());
+
+    if (!filename.isNull()) {
+        load(filename);
+    }
+
+}
+
+void MainWindow::load(const QString &filename) {
+
+    // open file
+    QFile loadFile(filename);
+    if (!loadFile.open(QIODevice::ReadOnly)) {
+
+        qWarning("Couldn't open load file."); // TODO present warning dialog
+        return;
+
+    }
+
+    // TODO check if format is correct
+
+    // clear out the current session
+    clearSession();
+
+    // load the new one
+
+}
+
+void MainWindow::clearSession(void) {
+
+    if (!((transport == STOPPED) || (transport == PAUSED))) {
+        sq_session_stop(&SESSION);
+        transport = STOPPED;
+    }
+
+    sq_session_disconnect_jack(&SESSION);
+
+    seqManager->clean(); // this stops the noti threads
+    seqManager->removeAllEditors();
+
+    outportManager->removeAllOutports();
+    inportManager->removeAllInports();
 
 }
 

@@ -121,3 +121,17 @@ void SequenceManager::advancePhocus(int increment) {
     }
 
 }
+
+void SequenceManager::removeAllEditors(void) {
+
+    std::vector<Editor*>::iterator iter;
+    for (iter = editors.begin(); iter != editors.end(); iter++) {
+        layout->removeWidget(*iter);
+        (*iter)->setVisible(false);
+        delete *iter;
+    }
+
+    setNullState();
+
+}
+

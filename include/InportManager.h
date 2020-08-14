@@ -13,6 +13,7 @@ class InportManager : public QFrame
     public:
         InportManager(void);
         void addInport(InportWidget*);
+        void removeAllInports(void);
 
     private:
         QVBoxLayout *layout;
