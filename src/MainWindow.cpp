@@ -263,8 +263,8 @@ void MainWindow::clearSession(void) {
     sq_session_teardown(SESSION);
 
     seqManager->clean(); // this stops the noti threads
-    seqManager->removeAllEditors();
 
+    seqManager->removeAllEditors();
     outportManager->removeAllOutports();
     inportManager->removeAllInports();
 

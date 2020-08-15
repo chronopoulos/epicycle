@@ -9,10 +9,9 @@ int Button::Edit_NoteVelocity = 1;
 int Button::Edit_NoteLength = 2;
 int Button::Edit_Microtime = 3;
 
-Button::Button(int step, sq_trigger_t *trig) {
+Button::Button(int step, sq_trigger_t *trig, QWidget *parent) : QFrame(parent) {
 
     m_step = step;
-    //m_trig = trig;   // memcpy?
     memcpy(&m_trig, trig, sizeof(sq_trigger_t));
 
     setMinimumSize(50,50);
@@ -235,7 +234,7 @@ void Button::paintEvent(QPaintEvent *e) {
 }
 
 
-Indicator::Indicator(int step) {
+Indicator::Indicator(int step, QWidget *parent) : QWidget(parent) {
 
     m_step = step;
 

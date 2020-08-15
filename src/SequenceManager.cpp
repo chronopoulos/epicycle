@@ -91,7 +91,6 @@ void SequenceManager::phocusEvent(QKeyEvent *e) {
         }
     }
     
-
     if (phocusIndex >= 0) {
         editors[phocusIndex]->phocusEvent(e);
     }
@@ -129,10 +128,14 @@ void SequenceManager::removeAllEditors(void) {
     for (iter = editors.begin(); iter != editors.end(); iter++) {
         layout->removeWidget(*iter);
         (*iter)->setVisible(false);
-        delete *iter;
+        (*iter)->deleteLater();
     }
 
+    editors.clear();
+
     setNullState();
+    phocusIndex = -1;
+    buttonPhocus = 0;
 
 }
 

@@ -12,7 +12,7 @@ class NotificationThread : public QThread
     Q_OBJECT
 
     public:
-        NotificationThread(QObject*, sq_sequence_t*);
+        NotificationThread(sq_sequence_t*, QObject*);
         void requestStop(void);
 
     private:

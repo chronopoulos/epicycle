@@ -30,7 +30,9 @@ void OutportManager::removeAllOutports(void) {
     for (iter = outports.begin(); iter != outports.end(); iter++) {
         layout->removeWidget(*iter);
         (*iter)->setVisible(false);
-        delete *iter;
+        (*iter)->deleteLater();
     }
+
+    outports.clear();
 
 }

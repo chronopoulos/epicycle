@@ -49,12 +49,12 @@ Editor::Editor(sq_sequence_t *seq) : QFrame() {
     for (int i=0; i < m_nsteps; i++) {
 
         // create and add button
-        tmpButton = new Button(i, &m_seq->trigs[i]);
+        tmpButton = new Button(i, &m_seq->trigs[i], this);
         buttons.push_back(tmpButton);
         midLayout->addWidget(tmpButton);
 
         // create and add indicator
-        tmpIndicator = new Indicator(i);
+        tmpIndicator = new Indicator(i, this);
         indicators.push_back(tmpIndicator);
         if (i==m_seq->first) {
             tmpIndicator->setFirst(true);
@@ -83,7 +83,7 @@ Editor::Editor(sq_sequence_t *seq) : QFrame() {
     updatePlayhead(0);
 
     // notifications
-    notiThread = new NotificationThread(this, m_seq);
+    notiThread = new NotificationThread(m_seq, this);
 
     // initialize the ClickLabel's
     nameLabel->setValue(m_seq->name);

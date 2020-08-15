@@ -13,8 +13,8 @@ class Button : public QFrame
     Q_OBJECT
 
     public:
-        Button(int);
-        Button(int, sq_trigger_t*);
+        //Button(int);
+        Button(int, sq_trigger_t*, QWidget*);
         void toggle(void);
         void setEditParameter(int);
 
@@ -51,7 +51,7 @@ class Indicator : public QWidget
     Q_OBJECT
 
     public:
-        Indicator(int);
+        Indicator(int, QWidget*);
         void setPlayhead(bool);
         void setFirst(bool);
         void setLast(bool);

@@ -30,8 +30,10 @@ void InportManager::removeAllInports(void) {
     for (iter = inports.begin(); iter != inports.end(); iter++) {
         layout->removeWidget(*iter);
         (*iter)->setVisible(false);
-        delete *iter;
+        (*iter)->deleteLater();
     }
+
+    inports.clear();
 
 }
 
