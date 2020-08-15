@@ -1,15 +1,21 @@
+#include <QDebug>
+#include <QRandomGenerator>
+
 #include "Helper.h"
 
 extern sq_session_t *SESSION;
 
 QString getRandomString(int length) {
 
+
    const QString possibleCharacters("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
+
+   QRandomGenerator *rand = QRandomGenerator::global();
 
    QString randomString;
    for(int i=0; i<length; ++i)
    {
-       int index = qrand() % possibleCharacters.length();
+       int index = rand->generate() % possibleCharacters.length();
        QChar nextChar = possibleCharacters.at(index);
        randomString.append(nextChar);
    }
