@@ -260,6 +260,8 @@ void MainWindow::load(const QString &filename) {
         outportManager->addOutport(new OutportWidget(SESSION->outports[i]));
     }
 
+    sessionFile = filename;
+
     DELTA.setState(false);
 
 }
