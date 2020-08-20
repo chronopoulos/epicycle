@@ -57,13 +57,23 @@ MainWindow::MainWindow() : QWidget() {
 
 void MainWindow::handleDelta(bool delta) {
 
+    QString sessionName = QFileInfo(sessionFile).fileName();
+
     if (delta) {
 
-        setWindowTitle(QString("epicycle*"));
+        setWindowTitle(QString("%1*  -  epicycle").arg(sessionName));
 
     } else {
 
-        setWindowTitle(QString("epicycle"));
+        if (sessionFile.isNull()) {
+
+            setWindowTitle(QString("e p i c y c l e"));
+
+        } else {
+
+            setWindowTitle(QString("%1  -  epicycle").arg(sessionName));
+
+        }
 
     }
 
