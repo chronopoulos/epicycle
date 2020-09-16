@@ -51,7 +51,7 @@ MainWindow::MainWindow() : QWidget() {
     transport = STOPPED;
 
     sessionFile = QDir::homePath().append("/untitled.sqa");
-    uninitialized = true;
+    initialized = false;
 
 }
 
@@ -168,10 +168,10 @@ void MainWindow::closeEvent(QCloseEvent *e) {
 
 bool MainWindow::save(void) {
 
-    if (uninitialized) {
-        return saveAs();
-    } else {
+    if (initialized) {
         return save(sessionFile);
+    } else {
+        return saveAs();
     }
 
 }
@@ -192,7 +192,7 @@ bool MainWindow::save(const QString &filename) {
     // reset flags
     sessionFile = filename;
     DELTA.setState(false);
-    uninitialized = false;
+    initialized = true;
 
     return true;
 
@@ -260,9 +260,10 @@ void MainWindow::load(const QString &filename) {
         outportManager->addOutport(new OutportWidget(SESSION->outports[i]));
     }
 
+    // reset flags
     sessionFile = filename;
-
     DELTA.setState(false);
+    initialized = true;
 
 }
 

@@ -34,7 +34,7 @@ class MainWindow : public QWidget
         OutportManager *outportManager;
 
         int transport;
-        bool uninitialized;
+        bool initialized;
 
     protected:
         void keyPressEvent(QKeyEvent*);
