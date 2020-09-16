@@ -7,6 +7,7 @@
 */
 
 #include <QApplication>
+#include <QDebug>
 
 #include "MainWindow.h"
 #include "Delta.h"
@@ -24,6 +25,10 @@ int main(int argc, char *argv[]) {
     app.setFont(font);
 
     MainWindow mainWindow;
+    if (app.arguments().length() > 1) {
+        mainWindow.load(app.arguments().at(1));
+    }
+
     mainWindow.show();
 
     return app.exec();
