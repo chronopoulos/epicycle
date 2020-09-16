@@ -41,6 +41,7 @@ MainWindow::MainWindow() : QWidget() {
 
     this->setLayout(layout);
     this->setWindowTitle("epicycle");
+    this->setWindowIcon(QIcon(":/img/icon.png"));
 
     connect(&DELTA, SIGNAL(stateChanged(bool)), this, SLOT(handleDelta(bool)));
 

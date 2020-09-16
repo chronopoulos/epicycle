@@ -1,5 +1,6 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
+    <file>img/icon.png</file>
     <file>img/pause.png</file>
     <file>img/play.png</file>
     <file>img/stop.png</file>
