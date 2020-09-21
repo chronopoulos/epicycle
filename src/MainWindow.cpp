@@ -30,12 +30,17 @@ MainWindow::MainWindow() : QWidget() {
     // GUI stuff
 
     layout = new QHBoxLayout();
+    leftLayout = new QVBoxLayout();
 
     inportManager = new InportManager();
     seqManager = new SequenceManager();
     outportManager = new OutportManager();
+    transportWidget = new TransportWidget();
 
-    layout->addWidget(inportManager);
+    leftLayout->addWidget(inportManager);
+    leftLayout->addWidget(transportWidget);
+
+    layout->addLayout(leftLayout);
     layout->addWidget(seqManager);
     layout->addWidget(outportManager);
 
@@ -83,9 +88,11 @@ void MainWindow::togglePlayState(void) {
 
     if ((transport == STOPPED) || (transport == PAUSED)) {
         sq_session_start(SESSION);
+        transportWidget->play();
         transport = PLAYING;
     } else if (transport == PLAYING) {
         sq_session_stop(SESSION);
+        transportWidget->stop();
         transport = STOPPED;
     }
 

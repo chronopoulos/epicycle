@@ -5,6 +5,7 @@
 #include "InportManager.h"
 #include "SequenceManager.h"
 #include "OutportManager.h"
+#include "TransportWidget.h"
 
 #define PLAYING 0
 #define PAUSED 1
@@ -28,10 +29,12 @@ class MainWindow : public QWidget
 
     private:
         QHBoxLayout *layout;
+        QVBoxLayout *leftLayout;
 
         InportManager *inportManager;
         SequenceManager *seqManager;
         OutportManager *outportManager;
+        TransportWidget *transportWidget;
 
         int transport;
         bool initialized;

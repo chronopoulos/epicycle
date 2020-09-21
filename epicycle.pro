@@ -48,6 +48,7 @@ SOURCES += ClickLabel.cpp
 SOURCES += Helper.cpp
 SOURCES += Delta.cpp
 SOURCES += Dialogs.cpp
+SOURCES += TransportWidget.cpp
 
 HEADERS += MainWindow.h
 HEADERS += SequenceManager.h
@@ -62,6 +63,7 @@ HEADERS += ClickLabel.h
 HEADERS += Helper.h
 HEADERS += Delta.h
 HEADERS += Dialogs.h
+HEADERS += TransportWidget.h
 
 RESOURCES = epicycle.qrc
 
