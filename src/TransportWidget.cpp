@@ -52,6 +52,7 @@ TransportWidget::TransportWidget(double initialBPM) {
     setFrameStyle(QFrame::Box | QFrame::Plain);
     setLineWidth(1);
     setMaximumHeight(100);
+    setMinimumWidth(165);
 
     // init
 

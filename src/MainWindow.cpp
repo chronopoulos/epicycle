@@ -15,7 +15,7 @@
 #include "Helper.h"
 
 #define TPS 256
-#define BPM_INITIAL 130.00
+#define BPM_INITIAL 120.00
 
 sq_session_t *SESSION;
 

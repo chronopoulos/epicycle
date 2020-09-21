@@ -13,7 +13,7 @@ OutportManager::OutportManager(void) : QFrame() {
     setFrameStyle(QFrame::Box | QFrame::Plain);
     setLineWidth(1);
 
-    setMinimumWidth(100);
+    setMinimumWidth(165);
 
 }
 
