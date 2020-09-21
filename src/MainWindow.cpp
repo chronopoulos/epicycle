@@ -49,6 +49,7 @@ MainWindow::MainWindow() : QWidget() {
     this->setWindowIcon(QIcon(":/img/icon.png"));
 
     connect(&DELTA, SIGNAL(stateChanged(bool)), this, SLOT(handleDelta(bool)));
+    connect(transportWidget, SIGNAL(stateChanged(int)), this, SLOT(handleTransport(int)));
 
     DELTA.setState(false);
 
@@ -84,16 +85,15 @@ void MainWindow::handleDelta(bool delta) {
     }
 
 }
-void MainWindow::togglePlayState(void) {
 
-    if ((transport == STOPPED) || (transport == PAUSED)) {
-        sq_session_start(SESSION);
-        transportWidget->play();
-        transport = PLAYING;
-    } else if (transport == PLAYING) {
+void MainWindow::handleTransport(int state) {
+
+    if (state == TransportWidget::Stopped) {
         sq_session_stop(SESSION);
-        transportWidget->stop();
-        transport = STOPPED;
+    } else if (state == TransportWidget::Paused) {
+        // TODO
+    } else if (state == TransportWidget::Playing) {
+        sq_session_start(SESSION);
     }
 
 }
@@ -106,7 +106,7 @@ void MainWindow::keyPressEvent(QKeyEvent *e) {
 
         if (e->key() == Qt::Key_Space) {
 
-            togglePlayState();
+            transportWidget->toggle();
 
         } else if (e->key() == Qt::Key_N && !(mod & Qt::ShiftModifier)) {
 

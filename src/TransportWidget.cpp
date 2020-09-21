@@ -25,6 +25,7 @@ TransportWidget::TransportWidget(void) {
     pauseButton->setIcon(QIcon(":/img/pause.png"));
     pauseButton->setCheckable(true);
     pauseButton->setFocusPolicy(Qt::NoFocus);
+    pauseButton->setDisabled(true);
     connect(pauseButton, SIGNAL(pressed(void)), this, SLOT(pause(void)));
 
     playButton = new QPushButton();
@@ -62,26 +63,38 @@ TransportWidget::TransportWidget(void) {
 
 void TransportWidget::setTempo(double bpm) {
 
-    m_period_ms = 60000. / (4*bpm);
+    emit tempoChanged(bpm);
 
 }
 
 void TransportWidget::stop(void) {
 
-    emit stopped();
     state = TransportWidget::Stopped;
+    emit stateChanged(state);
 
 }
 
 void TransportWidget::pause(void) {
 
     state = TransportWidget::Paused;
+    emit stateChanged(state);
 
 }
 
 void TransportWidget::play(void) {
 
     state = TransportWidget::Playing;
+    emit stateChanged(state);
+
+}
+
+void TransportWidget::toggle(void) {
+
+    if ((state == TransportWidget::Stopped) || (state == TransportWidget::Paused)) {
+        playButton->click();
+    } else if (state == TransportWidget::Playing) {
+        stopButton->click();
+    }
 
 }
 

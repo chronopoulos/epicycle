@@ -3,7 +3,6 @@
 #include <QPushButton>
 #include <QButtonGroup>
 #include <QIcon>
-#include <QDoubleSpinBox>
 
 #include "ClickLabel.h"
 
@@ -13,23 +12,25 @@ class TransportWidget : public QFrame
 
     public:
         TransportWidget(void);
-        int state;
         static int Stopped, Playing, Paused;
-        QPushButton *stopButton, *pauseButton, *playButton;
 
     private:
+        int state;
+        float tempo;
         QGridLayout *layout;
         ClickLabel *tempoLabel;
         QButtonGroup *buttonGroup;
+        QPushButton *stopButton, *pauseButton, *playButton;
 
     public slots:
         void setTempo(double);
         void stop(void);
         void pause(void);
         void play(void);
+        void toggle(void);
 
     signals:
-        void ticked(void);
-        void stopped(void);
+        void stateChanged(int);
+        void tempoChanged(double);
 
 };

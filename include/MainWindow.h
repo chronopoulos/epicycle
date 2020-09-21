@@ -45,6 +45,7 @@ class MainWindow : public QWidget
 
     public slots:
         void handleDelta(bool);
+        void handleTransport(int);
 
 
 };
