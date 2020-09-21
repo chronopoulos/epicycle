@@ -8,7 +8,7 @@ int TransportWidget::Stopped = 0;
 int TransportWidget::Paused = 1;
 int TransportWidget::Playing = 2;
 
-TransportWidget::TransportWidget(void) {
+TransportWidget::TransportWidget(double initialBPM) {
 
     // qobjects
 
@@ -55,7 +55,7 @@ TransportWidget::TransportWidget(void) {
 
     // init
 
-    tempoLabel->setValue(double(DEFAULT_TEMPO));
+    tempoLabel->setValue(double(initialBPM));
     stopButton->setChecked(true);
     state = TransportWidget::Stopped;
 
@@ -63,6 +63,7 @@ TransportWidget::TransportWidget(void) {
 
 void TransportWidget::setTempo(double bpm) {
 
+    tempoLabel->setValue(bpm);
     emit tempoChanged(bpm);
 
 }

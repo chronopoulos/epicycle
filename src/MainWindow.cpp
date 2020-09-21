@@ -15,7 +15,7 @@
 #include "Helper.h"
 
 #define TPS 256
-#define BPM 120
+#define BPM_INITIAL 130.00
 
 sq_session_t *SESSION;
 
@@ -25,7 +25,7 @@ MainWindow::MainWindow() : QWidget() {
 
     // initialize the global SESSION and main OUTPORT
     SESSION = sq_session_new("epicycle", TPS);
-    sq_session_set_bpm(SESSION, BPM);
+    sq_session_set_bpm(SESSION, BPM_INITIAL);
 
     // GUI stuff
 
@@ -35,7 +35,7 @@ MainWindow::MainWindow() : QWidget() {
     inportManager = new InportManager();
     seqManager = new SequenceManager();
     outportManager = new OutportManager();
-    transportWidget = new TransportWidget();
+    transportWidget = new TransportWidget(BPM_INITIAL);
 
     leftLayout->addWidget(inportManager);
     leftLayout->addWidget(transportWidget);
@@ -50,6 +50,7 @@ MainWindow::MainWindow() : QWidget() {
 
     connect(&DELTA, SIGNAL(stateChanged(bool)), this, SLOT(handleDelta(bool)));
     connect(transportWidget, SIGNAL(stateChanged(int)), this, SLOT(handleTransport(int)));
+    connect(transportWidget, SIGNAL(tempoChanged(double)), this, SLOT(handleTempo(double)));
 
     DELTA.setState(false);
 
@@ -95,6 +96,13 @@ void MainWindow::handleTransport(int state) {
     } else if (state == TransportWidget::Playing) {
         sq_session_start(SESSION);
     }
+
+}
+
+void MainWindow::handleTempo(double tempo) {
+
+    sq_session_set_bpm(SESSION, tempo);
+    DELTA.setState(true);
 
 }
 

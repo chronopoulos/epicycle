@@ -11,7 +11,7 @@ class TransportWidget : public QFrame
     Q_OBJECT
 
     public:
-        TransportWidget(void);
+        TransportWidget(double);
         static int Stopped, Playing, Paused;
 
     private:
