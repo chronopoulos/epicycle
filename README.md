@@ -1,6 +1,8 @@
 # epicycle
 a GUI sequencer using libsequoia
 
+![Epicycle Screenshot](img/screenshot.png)
+
 ## Note
 epicycle was developed as a personal testing and demonstration platform for
 libsequoia. it was never intended to be released. as such, it's a bit rough
