@@ -254,7 +254,7 @@ void Editor::contextMenuEvent(QContextMenuEvent*) {
 
 void Editor::cycleEditParameter(void) {
 
-    int newParameter = Button::Edit_NoteValue;;
+    int newParameter = Button::Edit_NoteValue;
 
     if (m_editParameter == Button::Edit_NoteValue) {
         newParameter = Button::Edit_NoteVelocity;
@@ -263,6 +263,8 @@ void Editor::cycleEditParameter(void) {
     } else if (m_editParameter == Button::Edit_NoteLength){
         newParameter = Button::Edit_Microtime;
     } else if (m_editParameter == Button::Edit_Microtime){
+        newParameter = Button::Edit_Probability;
+    } else if (m_editParameter == Button::Edit_Probability){
         newParameter = Button::Edit_NoteValue;
     }
 

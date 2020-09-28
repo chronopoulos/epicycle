@@ -8,6 +8,7 @@ int Button::Edit_NoteValue = 0;
 int Button::Edit_NoteVelocity = 1;
 int Button::Edit_NoteLength = 2;
 int Button::Edit_Microtime = 3;
+int Button::Edit_Probability = 4;
 
 Button::Button(int step, sq_trigger_t *trig, QWidget *parent) : QFrame(parent) {
 
@@ -121,7 +122,7 @@ void Button::wheelEvent(QWheelEvent *e) {
 void Button::adjustEditParameter(int increment) {
 
     int noteValue, noteVelocity;
-    float noteLength, microtime;
+    float noteLength, microtime, probability;
 
     if (m_isActive) {
 
@@ -160,10 +161,20 @@ void Button::adjustEditParameter(int increment) {
             microtime = m_trig.microtime;
 
             microtime += (float) increment / 100.;
-            if (microtime > 0.45) microtime = 0.45;
+            if (microtime > 0.49) microtime = 0.49;
             if (microtime < -0.5) microtime = -0.5;
 
             m_trig.microtime = microtime;
+
+        } else if (m_editParameter == Button::Edit_Probability) {
+
+            probability = m_trig.probability;
+
+            probability += (float) increment / 100.;
+            if (probability > 1.00) probability = 1.00;
+            if (probability < 0.00) probability = 0.00;
+
+            m_trig.probability = probability;
 
         }
 
@@ -207,6 +218,8 @@ void Button::paintEvent(QPaintEvent *e) {
             editText = QString::number(m_trig.length, 'f', 2);
         } else if (m_editParameter == Button::Edit_Microtime) {
             editText = QString::number(m_trig.microtime, 'f', 2);
+        } else if (m_editParameter == Button::Edit_Probability) {
+            editText = QString::number(m_trig.probability, 'f', 2);
         }
 
         painter.drawText(QRect(0.1*w,0.5*h,0.8*w,0.2*h), Qt::AlignCenter, editText);
