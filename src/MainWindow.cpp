@@ -14,7 +14,6 @@
 #include "Delta.h"
 #include "Helper.h"
 
-#define TPS 256
 #define BPM_INITIAL 120.00
 
 sq_session_t *SESSION;
@@ -23,8 +22,8 @@ extern Delta DELTA;
 
 MainWindow::MainWindow() : QWidget() {
 
-    // initialize the global SESSION and main OUTPORT
-    SESSION = sq_session_new("epicycle", TPS);
+    // initialize the global SESSION, set default BPM
+    SESSION = sq_session_new("epicycle");
     sq_session_set_bpm(SESSION, BPM_INITIAL);
 
     // GUI stuff
