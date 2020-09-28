@@ -26,7 +26,7 @@ sq_sequence_t *newDefaultSequence(void) {
 
     sq_sequence_t *seq;
 
-    seq = sq_sequence_new(16, 256);
+    seq = sq_sequence_new(16);
     sq_sequence_set_name(seq, getRandomString(4).toStdString().c_str());
     sq_sequence_set_notifications(seq, true);
     sq_session_add_sequence(SESSION, seq);
