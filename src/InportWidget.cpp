@@ -142,7 +142,7 @@ void InportWidget::mousePressEvent(QMouseEvent *e) {
         } else {
             for (int i=0; i<SESSION->nseqs; i++) {
                 if (seqActions[i] == selectedAction) {
-                    _inport_add_sequence_now(m_inport, SESSION->seqs[i]);
+                    sq_inport_add_sequence(m_inport, SESSION->seqs[i]);
                     DELTA.setState(true);
                     break;
                 }
