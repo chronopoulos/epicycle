@@ -16,7 +16,7 @@
 
 #define BPM_INITIAL 120.00
 
-sq_session_t *SESSION;
+sq_session_t SESSION;
 
 extern Delta DELTA;
 
@@ -263,16 +263,18 @@ void MainWindow::load(const QString &filename) {
     // load the new one
     SESSION = sq_session_load(filename.toStdString().c_str());
 
+    size_t i;
+
     // now build the GUI up from the sequoia session
-    for (int i=0; i<SESSION->nseqs; i++) {
-        sq_sequence_set_notifications(SESSION->seqs[i], true);
-        seqManager->addEditor(new Editor(SESSION->seqs[i]));
+    for (i=0; i<sq_session_get_nseqs(SESSION); i++) {
+        sq_sequence_set_notifications(sq_session_get_seq(SESSION, i), true);
+        seqManager->addEditor(new Editor(sq_session_get_seq(SESSION, i)));
     }
-    for (int i=0; i<SESSION->ninports; i++) {
-        inportManager->addInport(new InportWidget(SESSION->inports[i]));
+    for (i=0; i<sq_session_get_ninports(SESSION); i++) {
+        inportManager->addInport(new InportWidget(sq_session_get_inport(SESSION, i)));
     }
-    for (int i=0; i<SESSION->noutports; i++) {
-        outportManager->addOutport(new OutportWidget(SESSION->outports[i]));
+    for (i=0; i<sq_session_get_noutports(SESSION); i++) {
+        outportManager->addOutport(new OutportWidget(sq_session_get_outport(SESSION, i)));
     }
 
     // reset flags

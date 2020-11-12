@@ -8,13 +8,13 @@
 #include "Helper.h"
 #include "Delta.h"
 
-extern sq_session_t *SESSION;
+extern sq_session_t SESSION;
 extern Delta DELTA;
 
-OutportWidget::OutportWidget(sq_outport_t *outport) : QFrame() {
+OutportWidget::OutportWidget(sq_outport_t outport) : QFrame() {
 
     m_outport = outport;
-    m_name = QString(outport->name);
+    m_name = QString(sq_outport_get_name(outport));
 
     setFrameStyle(QFrame::Box | QFrame::Plain);
     setLineWidth(2);

@@ -7,10 +7,10 @@
 #include "Helper.h"
 #include "Delta.h"
 
-extern sq_session_t *SESSION;
+extern sq_session_t SESSION;
 extern Delta DELTA;
 
-Editor::Editor(sq_sequence_t *seq) : QFrame() {
+Editor::Editor(sq_sequence_t seq) : QFrame() {
 
     m_seq = seq;
 
@@ -49,26 +49,26 @@ Editor::Editor(sq_sequence_t *seq) : QFrame() {
     for (int i=0; i < m_nsteps; i++) {
 
         // create and add button
-        tmpButton = new Button(i, &m_seq->trigs[i], this);
+        tmpButton = new Button(i, sq_sequence_get_trig(m_seq, i), this);
         buttons.push_back(tmpButton);
         midLayout->addWidget(tmpButton);
 
         // create and add indicator
         tmpIndicator = new Indicator(i, this);
         indicators.push_back(tmpIndicator);
-        if (i==m_seq->first) {
+        if (i==sq_sequence_get_first(m_seq)) {
             tmpIndicator->setFirst(true);
             firstIndicator = tmpIndicator;
         }
-        if (i==(m_seq->last)) {
+        if (i==sq_sequence_get_last(m_seq)) {
             tmpIndicator->setLast(true);
             lastIndicator = tmpIndicator;
         }
         bottomLayout->addWidget(tmpIndicator);
 
         // connect them up
-        connect(tmpButton, SIGNAL(trigUpdated(int, sq_trigger_t*)),
-                this, SLOT(setTrig(int, sq_trigger_t*)));
+        connect(tmpButton, SIGNAL(trigUpdated(int, sq_trigger_t)),
+                this, SLOT(setTrig(int, sq_trigger_t)));
         connect(tmpIndicator, SIGNAL(firstRequested(int)), this, SLOT(setFirst(int)));
         connect(tmpIndicator, SIGNAL(lastRequested(int)), this, SLOT(setLast(int)));
         connect(tmpIndicator, SIGNAL(playheadRequested(int)), this, SLOT(setPlayhead(int)));
@@ -86,10 +86,10 @@ Editor::Editor(sq_sequence_t *seq) : QFrame() {
     notiThread = new NotificationThread(m_seq, this);
 
     // initialize the ClickLabel's
-    nameLabel->setValue(m_seq->name);
-    transposeLabel->setValue(m_seq->transpose);
-    clockDivLabel->setValue(m_seq->div);
-    muteLabel->setValue(m_seq->mute ? "True" : "False");
+    nameLabel->setValue(sq_sequence_get_name(m_seq));
+    transposeLabel->setValue(sq_sequence_get_transpose(m_seq));
+    clockDivLabel->setValue(sq_sequence_get_clockdivide(m_seq));
+    muteLabel->setValue(sq_sequence_get_mute(m_seq) ? "True" : "False");
 
     // connect the click labels
 
@@ -169,7 +169,7 @@ void Editor::setName(QString name) {
 
 }
 
-void Editor::setTrig(int step, sq_trigger_t *trig) {
+void Editor::setTrig(int step, sq_trigger_t trig) {
 
     sq_sequence_set_trig(m_seq, step, trig);
     DELTA.setState(true);
@@ -234,10 +234,10 @@ void Editor::contextMenuEvent(QContextMenuEvent*) {
 
     // kind of a dirty way to select the outport, but it works
 
-    sq_outport_t *outport;
-    for (int i=0; i<SESSION->noutports; i++) {
-        outport = SESSION->outports[i];
-        actions.push_back(menu.addAction(outport->name));
+    sq_outport_t outport;
+    for (size_t i=0; i<sq_session_get_noutports(SESSION); i++) {
+        outport = sq_session_get_outport(SESSION, i);
+        actions.push_back(menu.addAction(sq_outport_get_name(outport)));
     }
 
     QAction *selectedAction = menu.exec(QCursor::pos());
@@ -246,7 +246,7 @@ void Editor::contextMenuEvent(QContextMenuEvent*) {
     actionIter = std::find(actions.begin(), actions.end(), selectedAction);
     if (actionIter != actions.end()) {
         int iselected =  std::distance(actions.begin(), actionIter);
-        sq_sequence_set_outport(m_seq, SESSION->outports[iselected]);
+        sq_sequence_set_outport(m_seq, sq_session_get_outport(SESSION, iselected));
         DELTA.setState(true);
     }
 
@@ -302,7 +302,7 @@ void Editor::phocusEvent(QKeyEvent *e) {
         } else if (e->key() == Qt::Key_D) {
             clockDivLabel->runDialog();
         } else if (e->key() == Qt::Key_M) {
-            setMute(m_seq->mute ? "False" : "True");
+            setMute(sq_sequence_get_mute(m_seq) ? "False" : "True");
         }
     }
 

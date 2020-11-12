@@ -3,7 +3,7 @@
 
 #include "Helper.h"
 
-extern sq_session_t *SESSION;
+extern sq_session_t SESSION;
 
 QString getRandomString(int length) {
 
@@ -22,9 +22,9 @@ QString getRandomString(int length) {
    return randomString;
 }
 
-sq_sequence_t *newDefaultSequence(void) {
+sq_sequence_t newDefaultSequence(void) {
 
-    sq_sequence_t *seq;
+    sq_sequence_t seq;
 
     seq = sq_sequence_new(16);
     sq_sequence_set_name(seq, getRandomString(4).toStdString().c_str());
@@ -35,9 +35,9 @@ sq_sequence_t *newDefaultSequence(void) {
 
 }
 
-sq_inport_t *newDefaultInport(void) {
+sq_inport_t newDefaultInport(void) {
 
-    sq_inport_t *inport;
+    sq_inport_t inport;
 
     inport = sq_inport_new(getRandomString(4).toStdString().c_str());
     sq_session_register_inport(SESSION, inport);
@@ -46,9 +46,9 @@ sq_inport_t *newDefaultInport(void) {
 
 }
 
-sq_outport_t *newDefaultOutport(void) {
+sq_outport_t newDefaultOutport(void) {
 
-    sq_outport_t *outport;
+    sq_outport_t outport;
 
     outport = sq_outport_new(getRandomString(4).toStdString().c_str());
     sq_session_register_outport(SESSION, outport);

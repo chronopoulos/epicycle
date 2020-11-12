@@ -12,10 +12,10 @@ class OutportWidget : public QFrame
     Q_OBJECT
 
     public:
-        OutportWidget(sq_outport_t*);
+        OutportWidget(sq_outport_t);
 
     private:
-        sq_outport_t *m_outport;
+        sq_outport_t m_outport;
         QString m_name;
         QLabel *nameLabel;
 

@@ -10,15 +10,17 @@ int Button::Edit_NoteLength = 2;
 int Button::Edit_Microtime = 3;
 int Button::Edit_Probability = 4;
 
-Button::Button(int step, sq_trigger_t *trig, QWidget *parent) : QFrame(parent) {
+Button::Button(int step, sq_trigger_t trig, QWidget *parent) : QFrame(parent) {
 
     m_step = step;
-    memcpy(&m_trig, trig, sizeof(sq_trigger_t));
+
+    m_trig = sq_trigger_new();
+    sq_trigger_copy(m_trig, trig);  // (to, from)
 
     setMinimumSize(50,50);
     setMaximumSize(50,50);
 
-    m_isActive = (m_trig.type == TRIG_NOTE);
+    m_isActive = (sq_trigger_get_type(m_trig) == TRIG_NOTE);
 
     m_editParameter = Button::Edit_NoteValue;
 
@@ -87,12 +89,12 @@ void Button::toggle(void) {
     m_isActive = !m_isActive;
 
     if (m_isActive) {
-        sq_trigger_set_note(&m_trig, m_trig.note, m_trig.velocity, m_trig.length);
+        sq_trigger_set_type(m_trig, TRIG_NOTE);
     } else {
-        sq_trigger_set_null(&m_trig);
+        sq_trigger_set_type(m_trig, TRIG_NULL);
     }
 
-    emit trigUpdated(m_step, &m_trig);
+    emit trigUpdated(m_step, m_trig);
     update();
 
 }
@@ -128,57 +130,57 @@ void Button::adjustEditParameter(int increment) {
 
         if (m_editParameter == Button::Edit_NoteValue) {
 
-            noteValue = m_trig.note;
+            noteValue = sq_trigger_get_note_value(m_trig);
 
             noteValue += increment;
             if (noteValue > 127) noteValue = 127;
             if (noteValue < 0) noteValue = 0;
 
-            m_trig.note = noteValue;
+            sq_trigger_set_note_value(m_trig, noteValue);
 
         } else if (m_editParameter == Button::Edit_NoteVelocity) {
 
-            noteVelocity = m_trig.velocity;
+            noteVelocity = sq_trigger_get_note_velocity(m_trig);
 
             noteVelocity += increment;
             if (noteVelocity > 127) noteVelocity = 127;
             if (noteVelocity < 0) noteVelocity = 0;
 
-            m_trig.velocity = noteVelocity;
+            sq_trigger_set_note_velocity(m_trig, noteVelocity);
 
         } else if (m_editParameter == Button::Edit_NoteLength) {
 
-            noteLength = m_trig.length;
+            noteLength = sq_trigger_get_note_length(m_trig);
 
             noteLength += (float) increment / 100.;
             if (noteLength > 15.9) noteLength = 15.9;
             if (noteLength < 0.1) noteLength = 0.1;
 
-            m_trig.length = noteLength;
+            sq_trigger_set_note_length(m_trig, noteLength);
 
         } else if (m_editParameter == Button::Edit_Microtime) {
 
-            microtime = m_trig.microtime;
+            microtime = sq_trigger_get_microtime(m_trig);
 
             microtime += (float) increment / 100.;
             if (microtime > 0.49) microtime = 0.49;
             if (microtime < -0.5) microtime = -0.5;
 
-            m_trig.microtime = microtime;
+            sq_trigger_set_microtime(m_trig, microtime);
 
         } else if (m_editParameter == Button::Edit_Probability) {
 
-            probability = m_trig.probability;
+            probability = sq_trigger_get_probability(m_trig);
 
             probability += (float) increment / 100.;
             if (probability > 1.00) probability = 1.00;
             if (probability < 0.00) probability = 0.00;
 
-            m_trig.probability = probability;
+            sq_trigger_set_probability(m_trig, probability);
 
         }
 
-        emit trigUpdated(m_step, &m_trig);
+        emit trigUpdated(m_step, m_trig);
         update();
 
     }
@@ -211,15 +213,15 @@ void Button::paintEvent(QPaintEvent *e) {
         painter.drawRect(0.3*w, 0.1*h, 0.4*w, 0.2*h);
 
         if (m_editParameter == Button::Edit_NoteValue) {
-            editText = QString::number(m_trig.note);
+            editText = QString::number(sq_trigger_get_note_value(m_trig));
         } else if (m_editParameter == Button::Edit_NoteVelocity) {
-            editText = QString::number(m_trig.velocity);
+            editText = QString::number(sq_trigger_get_note_velocity(m_trig));
         } else if (m_editParameter == Button::Edit_NoteLength) {
-            editText = QString::number(m_trig.length, 'f', 2);
+            editText = QString::number(sq_trigger_get_note_length(m_trig), 'f', 2);
         } else if (m_editParameter == Button::Edit_Microtime) {
-            editText = QString::number(m_trig.microtime, 'f', 2);
+            editText = QString::number(sq_trigger_get_microtime(m_trig), 'f', 2);
         } else if (m_editParameter == Button::Edit_Probability) {
-            editText = QString::number(m_trig.probability, 'f', 2);
+            editText = QString::number(sq_trigger_get_probability(m_trig), 'f', 2);
         }
 
         painter.drawText(QRect(0.1*w,0.5*h,0.8*w,0.2*h), Qt::AlignCenter, editText);

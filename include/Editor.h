@@ -16,7 +16,7 @@ class Editor : public QFrame
     Q_OBJECT
 
     public:
-        Editor(sq_sequence_t*);
+        Editor(sq_sequence_t);
         void clean(void);
         void setPhocus(bool);
         void phocusEvent(QKeyEvent*);
@@ -32,7 +32,7 @@ class Editor : public QFrame
         Indicator *firstIndicator;
         Indicator *lastIndicator;
 
-        sq_sequence_t *m_seq;
+        sq_sequence_t m_seq;
 
         NotificationThread *notiThread;
 
@@ -51,7 +51,7 @@ class Editor : public QFrame
         void updateFirst(int);
         void updateLast(int);
         void setName(QString);
-        void setTrig(int, sq_trigger_t*);
+        void setTrig(int, sq_trigger_t);
         void setTranspose(int);
         void setPlayhead(int);
         void setClockDivide(int);

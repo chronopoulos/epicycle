@@ -12,11 +12,11 @@ class NotificationThread : public QThread
     Q_OBJECT
 
     public:
-        NotificationThread(sq_sequence_t*, QObject*);
+        NotificationThread(sq_sequence_t, QObject*);
         void requestStop(void);
 
     private:
-        sq_sequence_t *m_seq;
+        sq_sequence_t m_seq;
         bool running;
         QMutex mtx_running;
 

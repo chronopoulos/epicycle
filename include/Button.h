@@ -14,7 +14,7 @@ class Button : public QFrame
 
     public:
         //Button(int);
-        Button(int, sq_trigger_t*, QWidget*);
+        Button(int, sq_trigger_t, QWidget*);
         void toggle(void);
         void setEditParameter(int);
 
@@ -43,7 +43,7 @@ class Button : public QFrame
         void wheelEvent(QWheelEvent*);
 
     signals:
-        void trigUpdated(int, sq_trigger_t*);
+        void trigUpdated(int, sq_trigger_t);
 
 };
 

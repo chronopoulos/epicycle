@@ -7,13 +7,13 @@
 #include "Helper.h"
 #include "Delta.h"
 
-extern sq_session_t *SESSION;
+extern sq_session_t SESSION;
 extern Delta DELTA;
 
-InportWidget::InportWidget(sq_inport_t *inport) : QFrame() {
+InportWidget::InportWidget(sq_inport_t inport) : QFrame() {
 
     m_inport = inport;
-    m_name = QString(inport->name);
+    m_name = QString(sq_inport_get_name(inport));
 
     setFrameStyle(QFrame::Box | QFrame::Plain);
     setLineWidth(2);
@@ -25,7 +25,7 @@ InportWidget::InportWidget(sq_inport_t *inport) : QFrame() {
 
     layout->addWidget(nameLabel);
 
-    m_type = m_inport->type;
+    m_type = sq_inport_get_type(m_inport);
 
     resize(80, 80);
 
@@ -127,11 +127,12 @@ void InportWidget::mousePressEvent(QMouseEvent *e) {
 
         std::vector<QAction*> seqActions;
 
-        sq_sequence_t *seq;
+        sq_sequence_t seq;
         seqMenu->clear();
-        for (int i=0; i<SESSION->nseqs; i++) {
-            seq = SESSION->seqs[i];
-            seqActions.push_back(seqMenu->addAction(seq->name));
+        size_t i;
+        for (i=0; i<sq_session_get_nseqs(SESSION); i++) {
+            seq = sq_session_get_seq(SESSION, i);
+            seqActions.push_back(seqMenu->addAction(sq_sequence_get_name(seq)));
         }
 
         QAction *selectedAction;
@@ -140,9 +141,9 @@ void InportWidget::mousePressEvent(QMouseEvent *e) {
         if (selectedAction == nameAction) {
             launchNameDialog();
         } else {
-            for (int i=0; i<SESSION->nseqs; i++) {
+            for (i=0; i<sq_session_get_nseqs(SESSION); i++) {
                 if (seqActions[i] == selectedAction) {
-                    sq_inport_add_sequence(m_inport, SESSION->seqs[i]);
+                    sq_inport_add_sequence(m_inport, sq_session_get_seq(SESSION, i));
                     DELTA.setState(true);
                     break;
                 }

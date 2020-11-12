@@ -4,7 +4,7 @@
 
 #include "NotificationThread.h"
 
-NotificationThread::NotificationThread(sq_sequence_t *seq, QObject *parent) :
+NotificationThread::NotificationThread(sq_sequence_t seq, QObject *parent) :
 QThread(parent) {
 
     m_seq = seq;
