@@ -122,7 +122,7 @@ Editor::Editor(sq_sequence_t seq) : QFrame() {
 void Editor::paintEvent(QPaintEvent *e) {
 
     QPalette pal = palette();
-    pal.setColor(QPalette::Background, QColor(0,160,255));
+    pal.setColor(QPalette::Background, QColor(230,230,0));  // amber
     setAutoFillBackground(true);
     setPalette(pal);
 

@@ -33,7 +33,7 @@ OutportWidget::OutportWidget(sq_outport_t outport) : QFrame() {
 void OutportWidget::paintEvent(QPaintEvent *e) {
 
     QPalette pal = palette();
-    pal.setColor(QPalette::Background, QColor(200, 0, 0));
+    pal.setColor(QPalette::Background, QColor(0x80, 0x00, 0xff));   // purple
     setAutoFillBackground(true);
     setPalette(pal);
 

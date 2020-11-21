@@ -209,7 +209,7 @@ void Button::paintEvent(QPaintEvent *e) {
 
     if (m_isActive) {
 
-        painter.setBrush(Qt::red);
+        painter.setBrush(QColor(0xcc, 0x00, 0x00)); // deep red
         painter.drawRect(0.3*w, 0.1*h, 0.4*w, 0.2*h);
 
         if (m_editParameter == Button::Edit_NoteValue) {
@@ -236,10 +236,10 @@ void Button::paintEvent(QPaintEvent *e) {
     QPalette pal = palette();
     if (m_phocus) {
         setLineWidth(3);
-        pal.setColor(QPalette::Background, Qt::gray);
+        pal.setColor(QPalette::Background, QColor(150,150,150));    // light gray
     } else {
         setLineWidth(1);
-        pal.setColor(QPalette::Background, QColor(100, 100, 100));
+        pal.setColor(QPalette::Background, QColor(110, 110, 110));  // dark gray
     }
     setAutoFillBackground(true);
     setPalette(pal);
