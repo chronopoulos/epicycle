@@ -22,6 +22,8 @@ InportWidget::InportWidget(sq_inport_t inport) : QFrame() {
     setLayout(layout);
 
     nameLabel = new QLabel(m_name);
+    nameLabel->setStyleSheet("QLabel {color : black; font : bold;}");
+    nameLabel->setAlignment(Qt::AlignCenter);
 
     layout->addWidget(nameLabel);
 

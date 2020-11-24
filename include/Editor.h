@@ -38,6 +38,7 @@ class Editor : public QFrame
 
         ClickLabel *nameLabel;
         ClickLabel *transposeLabel, *clockDivLabel, *muteLabel;
+        ClickLabel *motionLabel;
 
         bool m_phocus;
 
@@ -56,6 +57,7 @@ class Editor : public QFrame
         void setPlayhead(int);
         void setClockDivide(int);
         void setMute(QString);
+        void setMotion(QString);
         void setFirst(int);
         void setLast(int);
 

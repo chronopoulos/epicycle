@@ -17,6 +17,7 @@ ClickLabel::ClickLabel(QString baseText, int type, QString title, QString label)
 
     // TODO: prevent stylesheet from propagating to children
     setAlignment(Qt::AlignCenter);
+    setStyleSheet("QLabel {font : bold;}");
 
     m_hardwired = false;
 

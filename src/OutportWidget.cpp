@@ -23,6 +23,8 @@ OutportWidget::OutportWidget(sq_outport_t outport) : QFrame() {
     setLayout(layout);
 
     nameLabel = new QLabel(m_name);
+    nameLabel->setStyleSheet("QLabel {color : black; font : bold;}");
+    nameLabel->setAlignment(Qt::AlignCenter);
 
     layout->addWidget(nameLabel);
 
@@ -33,7 +35,7 @@ OutportWidget::OutportWidget(sq_outport_t outport) : QFrame() {
 void OutportWidget::paintEvent(QPaintEvent *e) {
 
     QPalette pal = palette();
-    pal.setColor(QPalette::Background, QColor(0x80, 0x00, 0xff));   // purple
+    pal.setColor(QPalette::Background, QColor(0x02, 0xf4, 0x5f));  // aqua
     setAutoFillBackground(true);
     setPalette(pal);
 

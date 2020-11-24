@@ -32,17 +32,21 @@ Editor::Editor(sq_sequence_t seq) : QFrame() {
 
     // ClickLabel's
     nameLabel = new ClickLabel("N: %1", ClickLabel::Type_QString, "Set Name", "Name:");
-    topLayout->addWidget(nameLabel);
+    //topLayout->addWidget(nameLabel);
     transposeLabel = new ClickLabel("T: %1", ClickLabel::Type_Int, "Set Transpose", "Transpose:");
     topLayout->addWidget(transposeLabel);
     clockDivLabel = new ClickLabel("D: %1", ClickLabel::Type_Int, "Set Clock Divide", "Divisor:");
     topLayout->addWidget(clockDivLabel);
-
     muteLabel = new ClickLabel("M: %1", ClickLabel::Type_Item, "Set Mute", "Mute:");
     QStringList muteItems;
     muteItems << "False" << "True";
     muteLabel->setItems(muteItems);
     topLayout->addWidget(muteLabel);
+    motionLabel = new ClickLabel("O: %1", ClickLabel::Type_Item, "Set Motion", "Motion:");
+    QStringList motionItems;
+    motionItems << "Forward" << "Backward" << "Bounce";
+    motionLabel->setItems(motionItems);
+    topLayout->addWidget(motionLabel);
 
     Button *tmpButton;
     Indicator *tmpIndicator;
@@ -90,6 +94,14 @@ Editor::Editor(sq_sequence_t seq) : QFrame() {
     transposeLabel->setValue(sq_sequence_get_transpose(m_seq));
     clockDivLabel->setValue(sq_sequence_get_clockdivide(m_seq));
     muteLabel->setValue(sq_sequence_get_mute(m_seq) ? "True" : "False");
+    enum motion_type motion = sq_sequence_get_motion(m_seq);
+    if (motion == MOTION_FORWARD) {
+        motionLabel->setValue("Forward");
+    } else if (motion == MOTION_BACKWARD) {
+        motionLabel->setValue("Backward");
+    } else if (motion == MOTION_BOUNCE) {
+        motionLabel->setValue("Bounce");
+    }
 
     // connect the click labels
 
@@ -103,6 +115,9 @@ Editor::Editor(sq_sequence_t seq) : QFrame() {
 
     connect(muteLabel, SIGNAL(valueChanged(QString)), this, SLOT(setMute(QString)));
     connect(notiThread, SIGNAL(muteUpdated(QString)), muteLabel, SLOT(setValue(QString)));
+
+    connect(motionLabel, SIGNAL(valueChanged(QString)), this, SLOT(setMotion(QString)));
+    //connect(notiThread, SIGNAL(muteUpdated(QString)), muteLabel, SLOT(setValue(QString)));
 
     // step-wise notifications
     connect(notiThread, SIGNAL(playheadUpdated(int)), this, SLOT(updatePlayhead(int)));
@@ -122,7 +137,7 @@ Editor::Editor(sq_sequence_t seq) : QFrame() {
 void Editor::paintEvent(QPaintEvent *e) {
 
     QPalette pal = palette();
-    pal.setColor(QPalette::Background, QColor(230,230,0));  // amber
+    pal.setColor(QPalette::Background, QColor(0x80, 0x00, 0xff));   // purple
     setAutoFillBackground(true);
     setPalette(pal);
 
@@ -203,6 +218,20 @@ void Editor::setMute(QString mute) {
         sq_sequence_set_mute(m_seq, true);
     } else {
         sq_sequence_set_mute(m_seq, false);
+    }
+
+    DELTA.setState(true);
+
+}
+
+void Editor::setMotion(QString motion) {
+
+    if (motion == "Forward") {
+        sq_sequence_set_motion(m_seq, MOTION_FORWARD);
+    } else if (motion == "Backward") {
+        sq_sequence_set_motion(m_seq, MOTION_BACKWARD);
+    } else if (motion == "Bounce") {
+        sq_sequence_set_motion(m_seq, MOTION_BOUNCE);
     }
 
     DELTA.setState(true);
@@ -303,6 +332,8 @@ void Editor::phocusEvent(QKeyEvent *e) {
             clockDivLabel->runDialog();
         } else if (e->key() == Qt::Key_M) {
             setMute(sq_sequence_get_mute(m_seq) ? "False" : "True");
+        } else if (e->key() == Qt::Key_O) {
+            motionLabel->runDialog();
         }
     }
 
