@@ -290,7 +290,7 @@ void MainWindow::clearSession(void) {
         transport = STOPPED;
     }
 
-    sq_session_teardown(SESSION);
+    sq_session_delete_recursive(SESSION);
 
     seqManager->clean(); // this stops the noti threads
 
