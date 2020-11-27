@@ -117,7 +117,7 @@ Editor::Editor(sq_sequence_t seq) : QFrame() {
     connect(notiThread, SIGNAL(muteUpdated(QString)), muteLabel, SLOT(setValue(QString)));
 
     connect(motionLabel, SIGNAL(valueChanged(QString)), this, SLOT(setMotion(QString)));
-    //connect(notiThread, SIGNAL(muteUpdated(QString)), muteLabel, SLOT(setValue(QString)));
+    connect(notiThread, SIGNAL(motionUpdated(QString)), motionLabel, SLOT(setValue(QString)));
 
     // step-wise notifications
     connect(notiThread, SIGNAL(playheadUpdated(int)), this, SLOT(updatePlayhead(int)));

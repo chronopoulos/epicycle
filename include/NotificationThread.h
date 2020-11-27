@@ -30,6 +30,7 @@ class NotificationThread : public QThread
         void transposeUpdated(int);
         void clockDivideUpdated(int);
         void muteUpdated(QString);
+        void motionUpdated(QString);
 
 };
 

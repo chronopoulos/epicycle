@@ -52,6 +52,20 @@ void NotificationThread::run(void) {
             vb ? emit muteUpdated("True") : emit muteUpdated("False");
         }
 
+        if (sq_sequence_read_new_motion(m_seq, &vi)) {
+            switch (vi) {
+                case MOTION_FORWARD:
+                    emit motionUpdated("Forward");
+                    break;
+                case MOTION_BACKWARD:
+                    emit motionUpdated("Backward");
+                    break;
+                case MOTION_BOUNCE:
+                    emit motionUpdated("Bounce");
+                    break;
+            }
+        }
+
         usleep(10000);
 
     }
