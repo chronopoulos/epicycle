@@ -152,13 +152,12 @@ void MainWindow::keyPressEvent(QKeyEvent *e) {
 
 void MainWindow::closeEvent(QCloseEvent *e) {
 
-    seqManager->clean();
-
     if (DELTA.state()) { // if there are changes, then ask to save
 
         MaybeSaveDialog dlg;
         switch (dlg.exec()) {
             case -1: // Discard
+                seqManager->clean();
                 e->accept();
                 break;
             case 0: // Cancel
@@ -166,6 +165,7 @@ void MainWindow::closeEvent(QCloseEvent *e) {
                 break;
             case 1: // Save
                 if (save()) {
+                    seqManager->clean();
                     e->accept();
                 } else {
                     e->ignore();
@@ -175,6 +175,7 @@ void MainWindow::closeEvent(QCloseEvent *e) {
 
     } else { // otherwise, just close
 
+        seqManager->clean();
         e->accept();
 
     }
