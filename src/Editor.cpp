@@ -50,10 +50,12 @@ Editor::Editor(sq_sequence_t seq) : QFrame() {
 
     Button *tmpButton;
     Indicator *tmpIndicator;
+    sq_trigger_t trig = sq_trigger_new();
     for (int i=0; i < m_nsteps; i++) {
 
         // create and add button
-        tmpButton = new Button(i, sq_sequence_get_trig(m_seq, i), this);
+        sq_sequence_get_trig(m_seq, i, trig);
+        tmpButton = new Button(i, trig, this);
         buttons.push_back(tmpButton);
         midLayout->addWidget(tmpButton);
 
@@ -78,6 +80,7 @@ Editor::Editor(sq_sequence_t seq) : QFrame() {
         connect(tmpIndicator, SIGNAL(playheadRequested(int)), this, SLOT(setPlayhead(int)));
 
     }
+    sq_trigger_delete(trig);
 
     layout->addLayout(topLayout);
     layout->addLayout(midLayout);
