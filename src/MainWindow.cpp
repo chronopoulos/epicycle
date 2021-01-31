@@ -120,12 +120,16 @@ void MainWindow::keyPressEvent(QKeyEvent *e) {
             seqManager->addEditor(new Editor(newDefaultSequence()));
             DELTA.setState(true);
 
-        } else if (e->key() == Qt::Key_P) {
+        } else if (e->key() == Qt::Key_O) {
 
-            outportManager->addOutport(new OutportWidget(newDefaultOutport()));
-            DELTA.setState(true);
+            if (mod & Qt::ControlModifier) {
+                load();
+            } else {
+                outportManager->addOutport(new OutportWidget(newDefaultOutport()));
+                DELTA.setState(true);
+            }
 
-        } else if (e->key() == Qt::Key_Q) {
+        } else if (e->key() == Qt::Key_I) {
 
             inportManager->addInport(new InportWidget(newDefaultInport()));
             DELTA.setState(true);
@@ -137,10 +141,6 @@ void MainWindow::keyPressEvent(QKeyEvent *e) {
             } else {
                 save();
             }
-
-        } else if (e->key() == Qt::Key_O && (mod & Qt::ControlModifier)) {
-
-            load();
 
         }
 
