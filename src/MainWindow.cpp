@@ -17,13 +17,16 @@
 #define BPM_INITIAL 120.00
 
 sq_session_t SESSION;
-
+sq_trigger_t COPYBUF;
 extern Delta DELTA;
 
 MainWindow::MainWindow() : QWidget() {
 
-    // initialize the global SESSION, set default BPM
+    // initialize globals
     SESSION = sq_session_new("epicycle");
+    COPYBUF = sq_trigger_new();
+
+    // set default BPM
     sq_session_set_bpm(SESSION, BPM_INITIAL);
 
     // GUI stuff

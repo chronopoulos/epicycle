@@ -4,6 +4,8 @@
 #include <QPalette>
 #include <QApplication>
 
+extern sq_trigger_t COPYBUF;
+
 int Button::Edit_NoteValue = 0;
 int Button::Edit_NoteVelocity = 1;
 int Button::Edit_NoteLength = 2;
@@ -19,8 +21,6 @@ Button::Button(int step, sq_trigger_t trig, QWidget *parent) : QFrame(parent) {
 
     setMinimumSize(50,50);
     setMaximumSize(50,50);
-
-    m_isActive = (sq_trigger_get_type(m_trig) == TRIG_NOTE);
 
     m_editParameter = Button::Edit_NoteValue;
 
@@ -72,7 +72,19 @@ void Button::phocusEvent(QKeyEvent *e) {
         
     if ((e->key() == Qt::Key_T) & !(e->modifiers() & Qt::ShiftModifier)) {
 
-            toggle();
+        toggle();
+
+    } else if (e->key() == Qt::Key_Y) {
+
+        // copy
+        sq_trigger_copy(COPYBUF, m_trig);
+
+    } else if (e->key() == Qt::Key_P) {
+
+        // paste
+        sq_trigger_copy(m_trig, COPYBUF);
+        emit trigUpdated(m_step, m_trig);
+        update();
 
     }
 
@@ -86,12 +98,10 @@ void Button::mousePressEvent(QMouseEvent *e) {
 
 void Button::toggle(void) {
 
-    m_isActive = !m_isActive;
-
-    if (m_isActive) {
-        sq_trigger_set_type(m_trig, TRIG_NOTE);
-    } else {
+    if (sq_trigger_get_type(m_trig) == TRIG_NOTE) {
         sq_trigger_set_type(m_trig, TRIG_NULL);
+    } else {
+        sq_trigger_set_type(m_trig, TRIG_NOTE);
     }
 
     emit trigUpdated(m_step, m_trig);
@@ -126,7 +136,7 @@ void Button::adjustEditParameter(int increment) {
     int noteValue, noteVelocity;
     float noteLength, microtime, probability;
 
-    if (m_isActive) {
+    if (sq_trigger_get_type(m_trig) == TRIG_NOTE) {
 
         if (m_editParameter == Button::Edit_NoteValue) {
 
@@ -207,7 +217,7 @@ void Button::paintEvent(QPaintEvent *e) {
     w = width();
     h = height();
 
-    if (m_isActive) {
+    if (sq_trigger_get_type(m_trig) == TRIG_NOTE) {
 
         painter.setBrush(QColor(0xcc, 0x00, 0x00)); // deep red
         painter.drawRect(0.3*w, 0.1*h, 0.4*w, 0.2*h);

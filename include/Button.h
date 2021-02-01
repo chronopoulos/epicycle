@@ -29,7 +29,6 @@ class Button : public QFrame
         void adjustEditParameter(int);
 
     private:
-        bool m_isActive;
         int m_step;
         int m_editParameter;
 
