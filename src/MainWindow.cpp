@@ -18,7 +18,7 @@
 
 sq_session_t SESSION;
 sq_trigger_t COPYBUF;
-extern Delta DELTA;
+Delta DELTA;
 
 MainWindow::MainWindow() : QWidget() {
 
