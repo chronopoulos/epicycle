@@ -27,6 +27,7 @@ class Button : public QFrame
         void setPhocus(bool);
         void phocusEvent(QKeyEvent*);
         void adjustEditParameter(int);
+        void setChannel(uint8_t);
 
     private:
         int m_step;

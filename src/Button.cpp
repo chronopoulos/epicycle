@@ -258,6 +258,13 @@ void Button::paintEvent(QPaintEvent *e) {
 
 }
 
+void Button::setChannel(uint8_t channel) {
+
+    sq_trigger_set_channel(m_trig, channel);
+    emit trigUpdated(m_step, m_trig);
+
+}
+
 
 Indicator::Indicator(int step, QWidget *parent) : QWidget(parent) {
 

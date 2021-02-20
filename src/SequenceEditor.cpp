@@ -337,6 +337,15 @@ void SequenceEditor::phocusEvent(QKeyEvent *e) {
             setMute(sq_sequence_get_mute(m_seq) ? "False" : "True");
         } else if (e->key() == Qt::Key_O) {
             motionLabel->runDialog();
+        } else if (e->key() == Qt::Key_C) {
+            bool ok = false;
+            int channel;
+            channel = QInputDialog::getInt(this, "Sequence MIDI Channel", "Channel", 1, 1, 16, 1, &ok);
+            if (ok) {
+                for (int i=0; i<m_nsteps; i++) {
+                    buttons[i]->setChannel(channel);
+                }
+            }
         }
     }
 
