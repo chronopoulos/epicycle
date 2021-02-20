@@ -29,7 +29,7 @@ SequenceManager::SequenceManager(void) : QFrame() {
 
 }
 
-void SequenceManager::addEditor(Editor *ed) {
+void SequenceManager::addSequenceEditor(SequenceEditor *ed) {
 
     if (nullState) {
 
@@ -41,7 +41,7 @@ void SequenceManager::addEditor(Editor *ed) {
     }
 
     layout->addWidget(ed);
-    editors.push_back(ed);
+    sequenceEditors.push_back(ed);
 
 }
 
@@ -63,7 +63,7 @@ void SequenceManager::contextMenuEvent(QContextMenuEvent*) {
     QAction *action = menu.exec(QCursor::pos());
     if (action == addSeqAction) {
 
-        addEditor(new Editor(newDefaultSequence()));
+        addSequenceEditor(new SequenceEditor(newDefaultSequence()));
 
     }
 
@@ -71,9 +71,9 @@ void SequenceManager::contextMenuEvent(QContextMenuEvent*) {
 
 void SequenceManager::clean(void) {
 
-    // clean all editors
-    std::vector<Editor*>::iterator iter;
-    for (iter = editors.begin(); iter != editors.end(); iter++) {
+    // clean all SequenceEditors
+    std::vector<SequenceEditor*>::iterator iter;
+    for (iter = sequenceEditors.begin(); iter != sequenceEditors.end(); iter++) {
         (*iter)->clean();
     }
 
@@ -92,20 +92,20 @@ void SequenceManager::phocusEvent(QKeyEvent *e) {
     }
     
     if (phocusIndex >= 0) {
-        editors[phocusIndex]->phocusEvent(e);
+        sequenceEditors[phocusIndex]->phocusEvent(e);
     }
 
 }
 
 void SequenceManager::advancePhocus(int increment) {
 
-    int nseqs = (int) editors.size();
+    int nseqs = (int) sequenceEditors.size();
 
     if (nseqs > 0) {
 
         if (phocusIndex >= 0) {
-            buttonPhocus = editors[phocusIndex]->phocusIndex;
-            editors[phocusIndex]->setPhocus(false);
+            buttonPhocus = sequenceEditors[phocusIndex]->phocusIndex;
+            sequenceEditors[phocusIndex]->setPhocus(false);
             phocusIndex = phocusIndex + increment;
             if (phocusIndex >= nseqs) phocusIndex = nseqs - 1;
             if (phocusIndex < 0) {
@@ -115,23 +115,23 @@ void SequenceManager::advancePhocus(int increment) {
             phocusIndex = 0;
         }
 
-        editors[phocusIndex]->phocusIndex = buttonPhocus; // bad variable names..
-        editors[phocusIndex]->setPhocus(true);
+        sequenceEditors[phocusIndex]->phocusIndex = buttonPhocus; // bad variable names..
+        sequenceEditors[phocusIndex]->setPhocus(true);
 
     }
 
 }
 
-void SequenceManager::removeAllEditors(void) {
+void SequenceManager::removeAllSequenceEditors(void) {
 
-    std::vector<Editor*>::iterator iter;
-    for (iter = editors.begin(); iter != editors.end(); iter++) {
+    std::vector<SequenceEditor*>::iterator iter;
+    for (iter = sequenceEditors.begin(); iter != sequenceEditors.end(); iter++) {
         layout->removeWidget(*iter);
         (*iter)->setVisible(false);
         (*iter)->deleteLater();
     }
 
-    editors.clear();
+    sequenceEditors.clear();
 
     setNullState();
     phocusIndex = -1;

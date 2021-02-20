@@ -1,5 +1,5 @@
-#ifndef EDITOR_H
-#define EDITOR_H
+#ifndef SEQUENCEEDITOR_H
+#define SEQUENCEEDITOR_H
 
 #include <QFrame>
 #include <QHBoxLayout>
@@ -11,12 +11,12 @@
 #include "NotificationThread.h"
 #include "ClickLabel.h"
 
-class Editor : public QFrame
+class SequenceEditor : public QFrame
 {
     Q_OBJECT
 
     public:
-        Editor(sq_sequence_t);
+        SequenceEditor(sq_sequence_t);
         void clean(void);
         void setPhocus(bool);
         void phocusEvent(QKeyEvent*);

@@ -10,7 +10,7 @@
 #include <QDragEnterEvent>
 #include <QMimeData>
 
-#include "Editor.h"
+#include "SequenceEditor.h"
 
 class SequenceManager : public QFrame
 {
@@ -18,18 +18,18 @@ class SequenceManager : public QFrame
 
     public:
         SequenceManager(void);
-        void addEditor(Editor*);
+        void addSequenceEditor(SequenceEditor*);
         void clean(void);
         void advancePhocus(int);
         void phocusEvent(QKeyEvent*);
-        void removeAllEditors(void);
+        void removeAllSequenceEditors(void);
 
     private:
         QVBoxLayout *layout;
         QLabel *emptySetIcon;
         bool nullState;
         void setNullState(void);
-        std::vector<Editor*> editors;
+        std::vector<SequenceEditor*> sequenceEditors;
         int phocusIndex, buttonPhocus;
 
     protected:

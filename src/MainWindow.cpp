@@ -8,7 +8,7 @@
 #include "sequoia.h"
 
 #include "MainWindow.h"
-#include "Editor.h"
+#include "SequenceEditor.h"
 #include "OutportWidget.h"
 #include "Dialogs.h"
 #include "Delta.h"
@@ -120,7 +120,7 @@ void MainWindow::keyPressEvent(QKeyEvent *e) {
 
         } else if (e->key() == Qt::Key_N && !(mod & Qt::ShiftModifier)) {
 
-            seqManager->addEditor(new Editor(newDefaultSequence()));
+            seqManager->addSequenceEditor(new SequenceEditor(newDefaultSequence()));
             DELTA.setState(true);
 
         } else if (e->key() == Qt::Key_O) {
@@ -272,7 +272,7 @@ void MainWindow::load(const QString &filename) {
     // now build the GUI up from the sequoia session
     for (i=0; i<sq_session_get_nseqs(SESSION); i++) {
         sq_sequence_set_notifications(sq_session_get_seq(SESSION, i), true);
-        seqManager->addEditor(new Editor(sq_session_get_seq(SESSION, i)));
+        seqManager->addSequenceEditor(new SequenceEditor(sq_session_get_seq(SESSION, i)));
     }
     for (i=0; i<sq_session_get_ninports(SESSION); i++) {
         inportManager->addInport(new InportWidget(sq_session_get_inport(SESSION, i)));
@@ -298,7 +298,7 @@ void MainWindow::clearSession(void) {
 
     seqManager->clean(); // this stops the noti threads
 
-    seqManager->removeAllEditors();
+    seqManager->removeAllSequenceEditors();
     outportManager->removeAllOutports();
     inportManager->removeAllInports();
 

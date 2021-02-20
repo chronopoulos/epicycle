@@ -3,14 +3,14 @@
 #include <QMenu>
 #include <QApplication>
 
-#include "Editor.h"
+#include "SequenceEditor.h"
 #include "Helper.h"
 #include "Delta.h"
 
 extern sq_session_t SESSION;
 extern Delta DELTA;
 
-Editor::Editor(sq_sequence_t seq) : QFrame() {
+SequenceEditor::SequenceEditor(sq_sequence_t seq) : QFrame() {
 
     m_seq = seq;
 
@@ -137,7 +137,7 @@ Editor::Editor(sq_sequence_t seq) : QFrame() {
 
 }
 
-void Editor::paintEvent(QPaintEvent *e) {
+void SequenceEditor::paintEvent(QPaintEvent *e) {
 
     QPalette pal = palette();
     pal.setColor(QPalette::Background, QColor(0x80, 0x00, 0xff));   // purple
@@ -148,7 +148,7 @@ void Editor::paintEvent(QPaintEvent *e) {
 
 }
 
-void Editor::updatePlayhead(int step) {
+void SequenceEditor::updatePlayhead(int step) {
 
     if (playheadIndicator) playheadIndicator->setPlayhead(false);
     playheadIndicator = indicators[step];
@@ -156,7 +156,7 @@ void Editor::updatePlayhead(int step) {
 
 }
 
-void Editor::updateFirst(int step) {
+void SequenceEditor::updateFirst(int step) {
 
     if (firstIndicator) firstIndicator->setFirst(false);
     firstIndicator = indicators[step];
@@ -164,7 +164,7 @@ void Editor::updateFirst(int step) {
 
 }
 
-void Editor::updateLast(int step) {
+void SequenceEditor::updateLast(int step) {
 
     if (lastIndicator) lastIndicator->setLast(false);
     lastIndicator = indicators[step];
@@ -172,14 +172,14 @@ void Editor::updateLast(int step) {
 
 }
 
-void Editor::clean(void) {
+void SequenceEditor::clean(void) {
 
     notiThread->requestStop();
     notiThread->wait();
 
 }
 
-void Editor::setName(QString name) {
+void SequenceEditor::setName(QString name) {
 
     sq_sequence_set_name(m_seq, name.toStdString().c_str());
     nameLabel->setValue(name); // there are no notifications for name changes
@@ -187,35 +187,35 @@ void Editor::setName(QString name) {
 
 }
 
-void Editor::setTrig(int step, sq_trigger_t trig) {
+void SequenceEditor::setTrig(int step, sq_trigger_t trig) {
 
     sq_sequence_set_trig(m_seq, step, trig);
     DELTA.setState(true);
 
 }
 
-void Editor::setTranspose(int transpose) {
+void SequenceEditor::setTranspose(int transpose) {
 
     sq_sequence_set_transpose(m_seq, transpose);
     DELTA.setState(true);
 
 }
 
-void Editor::setPlayhead(int ph) {
+void SequenceEditor::setPlayhead(int ph) {
 
     sq_sequence_set_playhead(m_seq, ph);
     DELTA.setState(true);
 
 }
 
-void Editor::setClockDivide(int div) {
+void SequenceEditor::setClockDivide(int div) {
 
     sq_sequence_set_clockdivide(m_seq, div);
     DELTA.setState(true);
 
 }
 
-void Editor::setMute(QString mute) {
+void SequenceEditor::setMute(QString mute) {
 
     if (mute == "True") {
         sq_sequence_set_mute(m_seq, true);
@@ -227,7 +227,7 @@ void Editor::setMute(QString mute) {
 
 }
 
-void Editor::setMotion(QString motion) {
+void SequenceEditor::setMotion(QString motion) {
 
     if (motion == "Forward") {
         sq_sequence_set_motion(m_seq, MOTION_FORWARD);
@@ -241,7 +241,7 @@ void Editor::setMotion(QString motion) {
 
 }
 
-void Editor::setFirst(int first) {
+void SequenceEditor::setFirst(int first) {
 
     sq_sequence_set_first(m_seq, first);
 
@@ -249,7 +249,7 @@ void Editor::setFirst(int first) {
 
 }
 
-void Editor::setLast(int last) {
+void SequenceEditor::setLast(int last) {
 
     sq_sequence_set_last(m_seq, last);
 
@@ -257,7 +257,7 @@ void Editor::setLast(int last) {
 
 }
 
-void Editor::contextMenuEvent(QContextMenuEvent*) {
+void SequenceEditor::contextMenuEvent(QContextMenuEvent*) {
 
     QMenu menu;
 
@@ -284,7 +284,7 @@ void Editor::contextMenuEvent(QContextMenuEvent*) {
 
 }
 
-void Editor::cycleEditParameter(void) {
+void SequenceEditor::cycleEditParameter(void) {
 
     int newParameter = Button::Edit_NoteValue;
 
@@ -304,7 +304,7 @@ void Editor::cycleEditParameter(void) {
 
 }
 
-void Editor::setEditParameter(int parameter) {
+void SequenceEditor::setEditParameter(int parameter) {
 
     for (int i=0; i<m_nsteps; i++) {
         buttons[i]->setEditParameter(parameter);
@@ -314,7 +314,7 @@ void Editor::setEditParameter(int parameter) {
 
 }
 
-void Editor::phocusEvent(QKeyEvent *e) {
+void SequenceEditor::phocusEvent(QKeyEvent *e) {
 
     Qt::KeyboardModifiers mod = QApplication::keyboardModifiers();
 
@@ -346,7 +346,7 @@ void Editor::phocusEvent(QKeyEvent *e) {
 
 }
 
-void Editor::setPhocus(bool phocus) {
+void SequenceEditor::setPhocus(bool phocus) {
 
     buttons[phocusIndex]->setPhocus(phocus);
     m_phocus = phocus;
@@ -354,7 +354,7 @@ void Editor::setPhocus(bool phocus) {
 
 }
 
-void Editor::advancePhocus(int increment) {
+void SequenceEditor::advancePhocus(int increment) {
 
     if (phocusIndex >= 0) {
 
