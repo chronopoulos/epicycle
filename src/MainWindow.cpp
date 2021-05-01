@@ -201,8 +201,8 @@ bool MainWindow::save(const QString &filename) {
     QFile saveFile(filename);
     if (!saveFile.open(QIODevice::WriteOnly)) {
 
-        qWarning("Couldn't open save file.");
-        return false; // TODO present warning dialog
+        qWarning("Couldn't open %s; launching Save As dialog.", filename.toStdString().c_str());
+        return saveAs();
 
     }
 
