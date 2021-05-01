@@ -1,0 +1,21 @@
+language: c++
+compiler: g++
+
+before_install:
+    - sudo apt-get update
+
+install:
+    - sudo apt-get install -y libjack-jackd2-dev libjson-c-dev jackd2 git
+    - sudo apt-get install qt5-default g++
+    - git clone https://github.com/chronopoulos/libsequoia.git
+    - cd libsequoia
+    - make
+    - sudo make install
+    - cd ..
+
+
+script:
+    - qmake --version
+    - qmake
+    - make
+
