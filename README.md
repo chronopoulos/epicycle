@@ -1,5 +1,9 @@
 # epicycle
-a GUI sequencer using libsequoia
+
+[![Build Status](https://travis-ci.com/chronopoulos/epicycle.svg?branch=master)](https://travis-ci.com/chronopoulos/epicycle)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
+**epicycle** is a GUI sequencer based on [libsequoia](https://github.com/chronopoulos/libsequoia).
 
 ![Epicycle Screenshot](img/screenshot.png)
 
