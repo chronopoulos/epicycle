@@ -46,7 +46,7 @@ void Button::phocusEvent(QKeyEvent *e) {
 
     if (mod & Qt::ControlModifier) {
 
-        if (e->key() == Qt::Key_J) {
+        if ((e->key() == Qt::Key_J) || (e->key() == Qt::Key_Down)) {
 
             if (mod & Qt::ShiftModifier) {
                 increment = -4;
@@ -56,7 +56,7 @@ void Button::phocusEvent(QKeyEvent *e) {
 
             adjustEditParameter(increment);
 
-        } else if (e->key() == Qt::Key_K) {
+        } else if ((e->key() == Qt::Key_K) || (e->key() == Qt::Key_Up)) {
 
             if (mod & Qt::ShiftModifier) {
                 increment = 4;

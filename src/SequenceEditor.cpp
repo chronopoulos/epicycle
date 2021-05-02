@@ -319,9 +319,9 @@ void SequenceEditor::phocusEvent(QKeyEvent *e) {
 
     Qt::KeyboardModifiers mod = QApplication::keyboardModifiers();
 
-    if (e->key() == Qt::Key_L) {
+    if ((e->key() == Qt::Key_L) || (e->key() == Qt::Key_Right)) {
         advancePhocus(1);
-    } else if (e->key() == Qt::Key_H) {
+    } else if ((e->key() == Qt::Key_H) || (e->key() == Qt::Key_Left)) {
         advancePhocus(-1);
     } else if (e->key() == Qt::Key_Tab) {
         cycleEditParameter();

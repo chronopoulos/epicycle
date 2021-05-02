@@ -84,9 +84,9 @@ void SequenceManager::phocusEvent(QKeyEvent *e) {
     Qt::KeyboardModifiers mod = QApplication::keyboardModifiers();
 
     if (!(mod & Qt::ControlModifier)) {
-        if (e->key() == Qt::Key_J) {
+        if ((e->key() == Qt::Key_J) || (e->key() == Qt::Key_Down)) {
             advancePhocus(1);
-        } else if (e->key() == Qt::Key_K) {
+        } else if ((e->key() == Qt::Key_K) || (e->key() == Qt::Key_Up)) {
             advancePhocus(-1);
         }
     }
