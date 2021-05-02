@@ -1,5 +1,10 @@
+#include <QtGlobal>
 #include <QDebug>
+#include <QTime>
+
+#if QT_VERSION >= 0x050a00
 #include <QRandomGenerator>
+#endif
 
 #include "Helper.h"
 
@@ -7,15 +12,21 @@ extern sq_session_t SESSION;
 
 QString getRandomString(int length) {
 
-
    const QString possibleCharacters("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
 
-   QRandomGenerator *rand = QRandomGenerator::global();
+#if QT_VERSION >= 0x050a00
+    QRandomGenerator *rand = QRandomGenerator::global();
+#else
+    qsrand(QTime::currentTime().msec());
+#endif
 
    QString randomString;
-   for(int i=0; i<length; ++i)
-   {
+   for(int i=0; i<length; ++i) {
+#if QT_VERSION >= 0x050a00
        int index = rand->generate() % possibleCharacters.length();
+#else
+       int index = qrand() % possibleCharacters.length();
+#endif
        QChar nextChar = possibleCharacters.at(index);
        randomString.append(nextChar);
    }
