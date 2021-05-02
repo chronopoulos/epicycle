@@ -1,3 +1,4 @@
+#include <QtGlobal>
 #include <QDebug>
 #include <QLabel>
 #include <QMenu>
@@ -348,8 +349,13 @@ void SequenceEditor::phocusEvent(QKeyEvent *e) {
             }
         } else if (e->key() == Qt::Key_S) {
             bool ok = false;
-            float swing;
-            swing = QInputDialog::getDouble(this, "Set Swing", "Swing (0-1)", 0., 0., 1., 1, &ok, Qt::WindowFlags(), 0.1);
+#if QT_VERSION >= 0x050a00
+            float swing = QInputDialog::getDouble(this, "Set Swing", "Swing (0-1)", 0., 0., 1., 1,
+                                                    &ok, Qt::WindowFlags(), 0.1);
+#else
+            float swing = QInputDialog::getDouble(this, "Set Swing", "Swing (0-1)", 0., 0., 1., 1,
+                                                    &ok, Qt::WindowFlags());
+#endif
             if (ok) {
                 sq_sequence_set_swing(m_seq, swing);
             }
