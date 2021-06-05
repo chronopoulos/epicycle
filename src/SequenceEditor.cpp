@@ -8,6 +8,13 @@
 #include "Helper.h"
 #include "Delta.h"
 
+#if QT_VERSION >= 0x050a00
+#include <QRandomGenerator>
+#else
+#include <QTime>
+#endif
+
+
 extern sq_session_t SESSION;
 extern Delta DELTA;
 
@@ -359,12 +366,40 @@ void SequenceEditor::phocusEvent(QKeyEvent *e) {
             if (ok) {
                 sq_sequence_set_swing(m_seq, swing);
             }
+        } else if (e->key() == Qt::Key_R) {
+            randomize();
         }
     }
 
     if (phocusIndex >= 0) {
         buttons[phocusIndex]->phocusEvent(e);
     }
+
+}
+
+void SequenceEditor::randomize(void) {
+
+#if QT_VERSION >= 0x050a00
+    QRandomGenerator *rand = QRandomGenerator::global();
+#else
+    qsrand(QTime::currentTime().msec());
+#endif
+
+    sq_trigger_t trig = sq_trigger_new();
+    sq_trigger_set_type(trig, TRIG_NOTE);
+
+    for (int i=0; i<m_nsteps; i++) {
+#if QT_VERSION >= 0x050a00
+        int index = rand->generate() % 12;
+#else
+        int index = qrand() % 12;
+#endif
+        sq_trigger_set_note_value(trig, 60 + index);
+        sq_sequence_set_trig(m_seq, i, trig);
+        buttons[i]->setTrig(trig);
+    }
+
+    sq_trigger_delete(trig);
 
 }
 

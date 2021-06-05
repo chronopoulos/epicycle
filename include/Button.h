@@ -24,6 +24,7 @@ class Button : public QFrame
         static int Edit_Microtime;
         static int Edit_Probability;
 
+        void setTrig(sq_trigger_t);
         void setPhocus(bool);
         void phocusEvent(QKeyEvent*);
         void adjustEditParameter(int);

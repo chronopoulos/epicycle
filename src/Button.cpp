@@ -32,6 +32,13 @@ Button::Button(int step, sq_trigger_t trig, QWidget *parent) : QFrame(parent) {
 
 }
 
+void Button::setTrig(sq_trigger_t trig) {
+
+    sq_trigger_copy(m_trig, trig);  // (to, from)
+    update();
+
+}
+
 void Button::setPhocus(bool phocus) {
 
     m_phocus = phocus;
