@@ -81,3 +81,48 @@ void MaybeSaveDialog::discard(void) {
     done(-1);
 
 }
+
+RandomizeDialog::RandomizeDialog(void) {
+
+    layout = new QGridLayout();
+
+    layout->addWidget(new QLabel("start"), 0,0);
+    startSpin = new QSpinBox();
+    startSpin->setMinimum(1);
+    startSpin->setValue(60);
+    layout->addWidget(startSpin, 0,1);
+
+    layout->addWidget(new QLabel("range"), 1,0);
+    rangeSpin = new QSpinBox();
+    rangeSpin->setMinimum(1);
+    rangeSpin->setValue(16);
+    layout->addWidget(rangeSpin, 1,1);
+
+    okButton = new QPushButton("OK");
+    layout->addWidget(okButton, 2,0);
+    cancelButton = new QPushButton("Cancel");
+    layout->addWidget(cancelButton, 2,1);
+
+    setLayout(layout);
+
+    setModal(true);
+    setWindowTitle("Randomize Parameters");
+    setWindowFlags(Qt::WindowStaysOnTopHint);
+
+    connect(okButton, SIGNAL(released(void)), this, SLOT(accept(void)));
+    connect(cancelButton, SIGNAL(released(void)), this, SLOT(reject(void)));
+
+}
+
+int RandomizeDialog::getStart(void) {
+
+    return startSpin->value();
+
+}
+
+int RandomizeDialog::getRange(void) {
+
+    return rangeSpin->value();
+
+}
+

@@ -1,3 +1,6 @@
+#ifndef DIALOGS_H
+#define DIALOGS_H
+
 #include <QDialog>
 #include <QGridLayout>
 #include <QLabel>
@@ -41,3 +44,21 @@ class MaybeSaveDialog : public QDialog
     public slots:
         void discard(void);
 };
+
+class RandomizeDialog : public QDialog
+{
+    Q_OBJECT
+
+    public:
+        RandomizeDialog(void);
+        int getStart(void);
+        int getRange(void);
+
+    private:
+        QGridLayout *layout;
+        QPushButton *okButton, *cancelButton;
+        QSpinBox *startSpin, *rangeSpin;
+
+};
+
+#endif

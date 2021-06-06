@@ -21,7 +21,7 @@ class SequenceEditor : public QFrame
         void setPhocus(bool);
         void phocusEvent(QKeyEvent*);
         void advancePhocus(int);
-        void randomize(void);
+        void randomize(int, int);
         int phocusIndex;
 
     private:

@@ -14,6 +14,7 @@
 #include <QTime>
 #endif
 
+#include "Dialogs.h"
 
 extern sq_session_t SESSION;
 extern Delta DELTA;
@@ -367,7 +368,12 @@ void SequenceEditor::phocusEvent(QKeyEvent *e) {
                 sq_sequence_set_swing(m_seq, swing);
             }
         } else if (e->key() == Qt::Key_R) {
-            randomize();
+
+            RandomizeDialog dlg;
+            if (dlg.exec()) {
+                randomize(dlg.getStart(), dlg.getRange());
+            }
+
         }
     }
 
@@ -377,7 +383,7 @@ void SequenceEditor::phocusEvent(QKeyEvent *e) {
 
 }
 
-void SequenceEditor::randomize(void) {
+void SequenceEditor::randomize(int start, int range) {
 
 #if QT_VERSION >= 0x050a00
     QRandomGenerator *rand = QRandomGenerator::global();
@@ -390,11 +396,11 @@ void SequenceEditor::randomize(void) {
 
     for (int i=0; i<m_nsteps; i++) {
 #if QT_VERSION >= 0x050a00
-        int index = rand->generate() % 12;
+        int index = rand->generate() % range;
 #else
-        int index = qrand() % 12;
+        int index = qrand() % range;
 #endif
-        sq_trigger_set_note_value(trig, 60 + index);
+        sq_trigger_set_note_value(trig, start + index);
         sq_sequence_set_trig(m_seq, i, trig);
         buttons[i]->setTrig(trig);
     }
