@@ -67,4 +67,7 @@ HEADERS += TransportWidget.h
 
 RESOURCES = epicycle.qrc
 
+target.path = /usr/local/bin
+INSTALLS += target
+
 # vim:syntax=sh

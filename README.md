@@ -21,10 +21,11 @@ sudo apt-get install qt5-default g++
 ```
 You'll also need libsequoia, which is hosted [here](https://github.com/chronopoulos/libsequoia)
 
-## Build Instructions
+## Build and Install
 ```
 qmake
 make
+sudo make install
 ```
 
 ## Basic Usage
